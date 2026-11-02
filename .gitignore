@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+
+# R / private data (never commit real project scripts or data)
+.Rhistory
+.RData
+.Rproj.user/
+*.rds
+*.RData
+*.Rdata
+*.dta
+*.csv
+*.parquet
+*.xlsx
+projects/
