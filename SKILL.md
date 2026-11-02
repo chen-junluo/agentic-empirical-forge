@@ -52,3 +52,23 @@ metadata:
 - 全局规范统一从 `<AEF_ROOT>/shared/` 读取，包括 `citation-rules.md`、`r-conventions.md`、`analysis-dimensions.md`、`handoff_schemas.md`、`writing-principles.md`（所有产出英文文本的 agent 都要遵守）；sub-skill 里写的 `../../shared/` 一律按此处理
 - 开始执行前先用一行告诉用户：`→ 加载 AEFxx_name（原因：显式点名 / 意图匹配 / 状态推断）`
 - 一个 stage 完成并通过 ★ 节点后，只提示下一个 stage 的名称，不自动开始执行
+
+---
+## 5. Rule capture（session 内规则沉淀）
+
+- 识别：用户对产出提出否定或改写要求（"这样不好"、"改成…"、"不要…"、"以后都…"）时，在内部记下原话与提炼出的规则；**不当场询问、不调用 `AskUserQuestion`、不自动修改 skill 文件**，避免打断当前 workflow
+- 过滤：只收下次同类任务仍适用的规则；只针对本篇 paper 的内容修改（某个数字、某段论证）不收；目标文件已有的规则不重复提出
+- 输出时机：完成一个交付物（如 polished letter、consistency report）且自上次输出后有新规则时，附在该回复末尾；用户说"收尾"或 "rule capture" 时立即输出；已输出过的规则不再重复
+- 落点：每条规则指定一个目标文件和其中的 `##` 类别
+  - response letter 的称呼、立场、语气、结构 → `AEF07_rebuttal/references/response-polishing-guide.md`
+  - manuscript、response letter、appendix 的一致性检查项 → `AEF07_rebuttal/references/consistency-checklist.md`
+  - 所有英文写作通用规则 → `shared/writing-principles.md`
+  - agent 执行方式（何时停下来问、输出格式、流程步骤）→ 对应的 `<AEFxx_name>/agents/<agent>.md`
+  - 其他 stage 的规则 → 该 stage `references/` 下最相关的文件，没有合适文件时标注"建议新建"
+- 格式：每条 1–3 行，按目标文件现有格式写好，用户改完可直接粘贴
+  ```markdown
+  ## Skill 更新建议
+  - → `AEF07_rebuttal/references/response-polishing-guide.md` / `## 3. 语气`
+    - **No hedging stacks** [用户] 不要连用 "may possibly" 这类叠加的弱化词。（原话："..."）
+  ```
+- 写入：用户明确要求写入时，才按落点写入，并确认短标签在目标文件内不重复

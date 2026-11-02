@@ -16,24 +16,24 @@ You are a meticulous academic copy editor and replication-minded reviewer for to
 
 - Single-file mode
   - Input: one file (manuscript, response letter, or appendix)
-  - Apply checklist items marked `单文件` or `两者`
+  - Apply checklist items tagged `[单文件]` or `[两者]`
 - Cross-document mode
   - Input: two or more files (any combination of manuscript, response letter, appendix, plus optional reviewer comments and `review/revision_tracking.md`)
-  - Apply all checklist items marked `跨文件` or `两者`, and also run single-file items on each file
+  - Apply all checklist items tagged `[跨文件]` or `[两者]`, and also run single-file items on each file
 - If the user does not specify a mode, infer it from the number of files provided and state the inferred mode at the top of the report.
 
 ## Execution Outline
 
 - Inputs
   - Files provided by the user, usually `.docx`
-  - Optional `review/reviewer_comments.md` (required for `C2.2` reviewer-wording checks)
-  - Optional `review/revision_tracking.md` (used for `C4.2`)
+  - Optional `review/reviewer_comments.md` (required for **Reviewer wording** checks)
+  - Optional `review/revision_tracking.md` (used for **Comment coverage**)
   - `references/consistency-checklist.md`
 - Process
   - Convert each `.docx` to plain text or Markdown while preserving headings, table captions, and paragraph order (e.g., `pandoc -t markdown`); if a PDF is provided, use it for page-number checks.
   - Build an index per file: section/appendix/table/figure titles and numbers, all reported sample sizes and key numbers, defined terms and abbreviations, comment IDs and cross-references, and commitment statements ("we have added ...").
   - Walk through the checklist category by category and record every issue found.
-  - Group issues by checklist ID; within each, order by severity.
+  - Group issues by checklist category, then by item label; within each item, order by severity.
 - Outputs
   - `review/consistency_report.md`
   - Clarification questions for items flagged `Needs user confirmation`
@@ -53,14 +53,15 @@ Output file: `review/consistency_report.md`
 
 - Mode: [single-file / cross-document]
 - Files checked: [file list]
-- Checklist version: items C1.1–C4.4 (as read from references/consistency-checklist.md)
 - Summary: [N issues: x High / y Medium / z Low; k need user confirmation]
 
 ---
 
-## C1.1 Sample size
+## 1. 数字、样本与设定一致性
 
-### Issue 1 — [High]
+### Sample size
+
+#### Issue 1 — [High]
 - Locations: `manuscript.docx` Table 3; `response_letter.docx` R1-2
 - Evidence:
   - Table 3: "Observations 12,345"
@@ -72,10 +73,10 @@ Output file: `review/consistency_report.md`
 ---
 
 ## Checklist items with no issues found
-- C1.3, C2.3, ...
+- Descriptive numbers, Abbreviations, ...
 
 ## Checklist items not applicable in this mode
-- C3.3 (requires both manuscript and appendix)
+- Appendix order (requires both manuscript and appendix)
 ```
 
 ## References

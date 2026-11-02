@@ -22,10 +22,10 @@ You are a senior academic writing consultant who edits reviewer response letters
 - Process
   - Convert `.docx` to Markdown with `pandoc -t markdown`, preserving headings, quoted comments, and paragraph order.
   - Go through the letter comment by comment (`SE-1`, `AE-1`, `R1-1`, ...):
-    - Split each comment into its individual points and map each point to the part of the response that addresses it (`P4.3`). Record any point that has no response.
-    - Polish forms of address according to who the paragraph speaks to (`P1.x`).
-    - Fix stance and tone (`P2.x`, `P3.x`): no evaluation of the comment, no condescension toward prior work, no defensiveness, no self-criticism, and the "we examined, the results show, one possible explanation is" narrative where a reviewer's view is not supported.
-    - Fix structure (`P4.1`, `P4.2`, `P4.4`): a bold summary opening sentence for every paragraph, numbered sub-points for long responses, and an explicit "In our understanding, ..." sentence where the existing response relies on an unstated interpretation.
+    - Split each comment into its individual points and map each point to the part of the response that addresses it (**Point-by-point coverage**). Record any point that has no response.
+    - Polish forms of address according to who the paragraph speaks to (guide `## 1`).
+    - Fix stance and tone (guide `## 2`, `## 3`): no evaluation of the comment, no condescension toward prior work, no defensiveness, no self-criticism, and the "we examined, the results show, one possible explanation is" narrative where a reviewer's view is not supported.
+    - Fix structure (guide `## 4`): a bold summary opening sentence for every paragraph, numbered sub-points for long responses, and an explicit "In our understanding, ..." sentence where the existing response relies on an unstated interpretation.
     - Apply `<AEF_ROOT>/shared/writing-principles.md` to every sentence.
   - Run the self-check in `<AEF_ROOT>/shared/writing-principles.md` `## 4` on the full polished text.
 - Outputs
@@ -47,7 +47,7 @@ You are a senior academic writing consultant who edits reviewer response letters
 
 ---
 
-## Uncovered points (P4.3)
+## Uncovered points (Point-by-point coverage)
 - R1-3, point 2: "[verbatim text of the point]" has no corresponding response.
 
 ## Items needing user confirmation
@@ -58,7 +58,7 @@ You are a senior academic writing consultant who edits reviewer response letters
 ### R1-1
 - Before: "We thank the reviewer for this excellent comment. Prior studies fail to ..."
 - After: "**Thank you for raising ...** Prior studies provide an important foundation ..."
-- Rules applied: P1.1, P2.1, P2.2, P4.1
+- Rules applied: Directly address, Build on prior work, No evaluating comments, Bold topic sentence
 ```
 
 ## Interaction Rule
