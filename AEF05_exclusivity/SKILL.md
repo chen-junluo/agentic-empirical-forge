@@ -1,102 +1,38 @@
 ---
 name: AEF05_exclusivity
-description: "先读取或检索目标期刊的大批量文献，提炼该 journal 特有的 exclusivity 文档，再基于该文档对 manuscript 做针对性修改。当前版本将其视为 advanced workflow。"
+description: "期刊定制工具箱：对目标期刊已发表论文做文献综述（用户提供或通过 OpenAlex 检索），提炼该 journal 的 topics、methods、framing、contribution style、section 排布、偏好与排斥项，形成可迭代的 Exclusivity Document；再据此对 manuscript 做结构、framing、语气的定向改写。两个 agent 均可单独调用。"
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-04-17"
+  version: "1.1.0"
+  last_updated: "2026-11-02"
   stage: "05"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"
 ---
 
-# Stage 05: Exclusivity — 期刊定制与行文排他性
+# AEF05_exclusivity：期刊定制与行文排他性
 
-针对目标期刊的大批量文献，总结该 journal 的叙事方式、section 排布、偏好与排斥项，再基于该 exclusivity 文档对 manuscript 做定向修改。
+- 用法：按用户意图从 agent menu 选一个 agent，Read `agents/<name>.md` 执行；不需要从第一个 agent 开始
+- 典型顺序：`journal-profiler` → `journal-tailor`
+- Input / Output：menu 里的 input 只是来源示例；输入格式不限，输出默认在对话中给出，用户要求时才保存，保存位置由用户指定（见根 `SKILL.md` `## 6`）
 
-## Objectives
+---
+## 1. Agent menu
 
-- 当前版本定位：advanced workflow，用于主路径草稿之后的期刊定制
-- 处理用户提供或自行检索的大批量 journal 文献
-- 总结某个 journal 的叙事方式、写作风格、section 排布与偏好
-- 输出可迭代更新的 Exclusivity Document
-- 基于 Exclusivity Document 对 manuscript 做具体修改建议与改写
+- `journal-profiler`：对目标期刊已发表论文做文献综述，把它们当作 corpus 阅读，总结 topics、methods、开篇方式、贡献 framing、contribution style、section 结构、语气，以及期刊偏好与排斥项
+  - 何时用：确定目标期刊后，需要了解它的写作惯例；或补充新文献更新已有文档
+  - Input：要考虑的 journal（一本或多本，用户说明即可）、corpus 所在位置（没有时通过 OpenAlex 检索）；可选 topic、时间窗、当前 manuscript 作对照
+  - Output：Exclusivity Document（多本期刊时每本一份 + 跨期刊对比）
+  - Rules：`<AEF_ROOT>/shared/citation-rules.md`、`<AEF_ROOT>/shared/openalex-protocol.md`、`templates/journal-profile-template.md`、`templates/journal-fit-report-template.md`
+  - ★ 停下：开始前用户确认 journal 与 corpus；需要 OpenAlex 检索时，先确认期刊列表、时间窗、topic 过滤与样本量；完成后用户审阅 Exclusivity Document
+- `journal-tailor`：对照 Exclusivity Document 找出 manuscript 的偏离，先改结构、framing、语气，再做细节修改
+  - 何时用：已有 Exclusivity Document，需要据此修改论文
+  - Input：Exclusivity Document 与 manuscript（位置、格式不限，用户告知即可）；可选用户指定不能改动的内容
+  - Output：修改建议与 revision notes；用户确认后才修改 manuscript（`.tex` 或 `.docx`）
+  - Rules：`templates/journal-fit-report-template.md`、`<AEF_ROOT>/shared/writing-principles.md`
+  - ★ 停下：动手改 manuscript 前用户确认修改方向（含 notes 中的 `Open Decisions for User`）
 
-## Human-in-the-Loop Checkpoints
+---
+## 2. Files
 
-- 用户指定目标 journal
-- 用户确认 exclusivity corpus 是否合适
-- 用户审阅 Exclusivity Document
-- 用户确认 manuscript 修改方向
-
-## Orchestration Workflow
-
-```text
-User specifies target journal + provides papers or asks for retrieval
-        │
-        ▼
-┌──────────────────────────────┐
-│ journal-exclusivity-profiler │
-│ ① 处理大批量 journal 文献      │
-│ ② 总结叙事与结构偏好           │
-│ ③ 输出 exclusivity document   │
-└───────┬──────────────────────┘
-        │
-        ▼
-  ★ User reviews exclusivity document
-        │
-        ▼
-┌──────────────────────────────┐
-│ exclusivity-rewriter         │
-│ ① 对照 exclusivity document  │
-│ ② 定向修改 manuscript        │
-│ ③ 输出 revision notes        │
-└───────┬──────────────────────┘
-        │
-        ▼
-  ★ User confirms manuscript adaptation direction
-```
-
-## Agent Team (2 Agents)
-
-| # | Agent | Role | Definition |
-|---|-------|------|------------|
-| 1 | `journal-exclusivity-profiler` | 期刊排他性提炼员：处理大批量 journal 文献，总结叙事、结构、风格和偏好，输出可迭代 Exclusivity Document | `agents/journal-exclusivity-profiler.md` |
-| 2 | `exclusivity-rewriter` | 排他性改写员：基于 Exclusivity Document 对 manuscript 做定向修改与 revision notes | `agents/exclusivity-rewriter.md` |
-
-## Templates
-
-| Template | Purpose |
-|----------|---------|
-| `templates/journal-profile-template.md` | 新期刊档案模板 |
-| `templates/journal-fit-report-template.md` | Exclusivity / fit 文档模板参考 |
-
-## Input
-
-- `projects/<slug>/main.tex`
-- `projects/<slug>/strategy/target_journal.md`
-- 用户提供的 journal papers，或用户要求检索的 journal corpus
-
-## Output
-
-- `projects/<slug>/strategy/exclusivity_document.md`
-- `projects/<slug>/strategy/exclusivity_revision_notes.md`
-- 修改后的 manuscript（用户确认后）
-
-## Directory Structure
-
-```text
-AEF05_exclusivity/
-├── SKILL.md
-├── agents/
-│   ├── journal-exclusivity-profiler.md
-│   └── exclusivity-rewriter.md
-└── templates/
-    ├── journal-profile-template.md
-    └── journal-fit-report-template.md
-```
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-04-19 | First public v1.0.0 release |
+- 本 stage 无 `references/`；citation 与 OpenAlex 规则统一维护在 `<AEF_ROOT>/shared/citation-rules.md`、`<AEF_ROOT>/shared/openalex-protocol.md`
+- 本 stage 全部文件：`templates/journal-profile-template.md`、`templates/journal-fit-report-template.md`

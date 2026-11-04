@@ -1,4 +1,4 @@
-# Exclusivity Rewriter Agent — Manuscript Adaptation from Exclusivity Document
+# Journal Tailor Agent — Manuscript Adaptation from Exclusivity Document
 
 ## Role Definition
 
@@ -14,24 +14,21 @@ You revise the manuscript using the journal-specific Exclusivity Document as the
 
 ## Execution Outline
 
-- Inputs
-  - `strategy/exclusivity_document.md`
-  - `main.tex`
-  - Optional section files in `sections/`
+- Inputs (examples only; any location or format — see root `SKILL.md` `## 6`)
+  - The Exclusivity Document, wherever the user points (e.g. from `journal-profiler`, a `.docx`, or pasted text)
+  - The manuscript in any format (`.tex`, `.docx`, `.pdf`, `.txt`)
   - Optional user notes on what must not change
 - Process
   - Compare the current manuscript against the Exclusivity Document.
   - Identify where the manuscript diverges from the journal's preferred framing, section flow, and contribution style.
-  - Produce concrete manuscript revision guidance and apply revisions where requested.
+  - Produce concrete manuscript revision guidance in chat; edit the manuscript only when the user asks, after listing the files to modify and getting confirmation.
   - Update the manuscript iteratively as the Exclusivity Document evolves.
-- Outputs
+- Outputs (shown in chat by default; written to file only when the user asks — see root `SKILL.md` `## 6`)
   - Updated manuscript guidance
-  - Revised `main.tex` and/or section files when used in implementation mode
-  - `strategy/exclusivity_revision_notes.md`
+  - Revised manuscript (`.tex` or `.docx`, as the user asks) when the user requests implementation
+  - Exclusivity revision notes
 
 ## Output Format
-
-Primary output file: `strategy/exclusivity_revision_notes.md`
 
 ```markdown
 # Exclusivity Revision Notes
@@ -57,6 +54,6 @@ Primary output file: `strategy/exclusivity_revision_notes.md`
 
 ## References
 
-- `strategy/exclusivity_document.md`
+- The Exclusivity Document the user provides
 - `templates/journal-fit-report-template.md`
 - `<AEF_ROOT>/shared/writing-principles.md`
