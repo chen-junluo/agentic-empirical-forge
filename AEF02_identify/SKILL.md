@@ -1,102 +1,33 @@
 ---
 name: AEF02_identify
-description: "基于选定的 idea，完成 identify 阶段的基础实证分析（数据清洗、描述性统计、主回归），产出 preliminary results。确认结果方向后进入 AEF03_extend。"
+description: "基础识别设计工具箱：只做 design，不写代码。依据 references/ 下的方法文献总结（Oster、causal ML、Conley、good / bad controls）设计 credible、causal 的 baseline：estimand、specification、FE、clustering、controls 的 good / bad 判断、identification assumptions 及检验方式、alternative explanations 及排除方法、主要 threats。"
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-04-17"
+  version: "1.1.0"
+  last_updated: "2026-11-02"
   stage: "02"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"
 ---
 
-# Stage 02: identify — 基础实证分析
+# AEF02_identify：基础识别设计
 
-基于选定的 idea，完成 identify 阶段的基础实证分析（数据清洗、描述性统计、主回归），产出 preliminary results。确认结果方向后再进入 AEF03_extend。
+- 用法：Read `agents/credible-baseline-identifier.md` 执行
+- 典型顺序：`credible-baseline-identifier` → 用户按设计自行跑 baseline → 结果可扩展时进入 `AEF03_extend`
+- Input / Output：menu 里的 input 只是来源示例；输入格式不限，输出默认在对话中给出，用户要求时才保存，保存位置由用户指定（见根 `SKILL.md` `## 6`）
+- 本 stage 只做 design，不写代码、不跑代码
 
-## Objectives
+---
+## 1. Agent menu
 
-- 数据清洗与描述性统计
-- 主回归（至少一个可汇报的结果）
-- 确认结果方向，决定是否继续
+- `credible-baseline-identifier`：提出 baseline design，覆盖 estimand、specification、FE、clustering、controls 的 good / bad 判断、identification assumptions 及检验方式、alternative explanations 及排除方法、主要 threats；目标是 baseline credible、causal、排除了 alternatives、满足 design assumptions
+  - 何时用：已选定研究设计或 proposal，需要设计 baseline 识别方案；或已有初步结果，需要检查 baseline 是否可信
+  - Input：用户确认的研究设计或 proposal（文件或口头描述）、数据说明（如 `DATA_DESCRIPTION.md` 与 Identification Profile）；可选用户已有的初步结果
+  - Output：baseline design
+  - Rules：`references/oster.md`、`references/causal-ml.md`、`references/conley.md`、`references/good-bad-controls.md`
+  - ★ 停下：设计完成后用户决定采用、修改或 pivot
 
-## Human-in-the-Loop Checkpoints
+---
+## 2. Files
 
-- 用户确认分析方案（做哪些回归，用什么识别策略）
-- 用户审查 preliminary results，决定是否继续
-
-## Orchestration Workflow
-
-```
-User confirms idea (from Stage 01)
-        │
-        ▼
-┌───────────────────┐
-│  data-analyst     │
-│  ① deps.R         │
-│  ② 01_clean.R     │
-│  ③ 02_descriptive │
-└───────┬───────────┘
-        │
-        ▼
-  ★ User reviews descriptive stats
-        │
-        ▼
-┌───────────────────┐
-│  data-analyst     │
-│  ④ 03_main.R      │
-│  ⑤ results_log.md │
-└───────┬───────────┘
-        │
-        ▼
-  ★ User reviews preliminary results
-        │
-        ├── Results worth extending ──▶ Stage 03 (extend)
-        └── Results weak ──▶ Revise analysis plan / pivot
-```
-
-## Agent Team (1 Agent)
-
-| # | Agent | Role | Definition |
-|---|-------|------|------------|
-| 1 | `data-analyst` | 计量经济学分析师：编写并执行 R 脚本，输出可直接引用的 LaTeX 表格和图表 | `agents/data-analyst.md` |
-
-## References
-
-| Reference | Purpose | Used By |
-|-----------|---------|---------|
-| `references/r-conventions.md` | R 脚本规范（包管理、回归、输出格式） | data-analyst |
-| `references/analysis-dimensions.md` | 分析维度与调参规范（DV/IV 形态、FE 化、Binning、聚类 SE） | data-analyst |
-
-## Input
-
-- `projects/<slug>/data/raw/`（原始数据）
-- `projects/<slug>/analysis/analysis_plan.md`（用户确认后）
-
-## Output
-
-- `projects/<slug>/analysis/scripts/deps.R`
-- `projects/<slug>/analysis/scripts/01_clean.R`
-- `projects/<slug>/analysis/scripts/02_descriptive.R`
-- `projects/<slug>/analysis/scripts/03_main.R`
-- `projects/<slug>/analysis/tables/tab_01_descriptive.tex`
-- `projects/<slug>/analysis/tables/tab_02_main.tex`
-- `projects/<slug>/analysis/results_log.md`
-
-## Directory Structure
-
-```text
-AEF02_identify/
-├── SKILL.md
-├── agents/
-│   └── data-analyst.md
-├── references/
-│   ├── r-conventions.md
-│   └── analysis-dimensions.md
-└── templates/
-```
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-04-19 | First public v1.0.0 release |
+- `references/` 是用户维护的方法文献总结，新增内容直接改对应文件（见根 `SKILL.md` `## 5. Rule capture`）
+- 本 stage 全部文件：`references/oster.md`、`references/causal-ml.md`、`references/conley.md`、`references/good-bad-controls.md`
