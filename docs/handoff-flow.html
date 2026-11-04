@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AEF Handoff Atlas</title>
+<style>
+:root{
+  --paper:#f3eee4;--paper2:#e8e1d2;--card:#fbf8f2;--ink:#1c1a16;--soft:#6a6356;--faint:#9a907d;--rule:#d3c9b5;
+  --verm:#cf4520;--verm-bg:#fbe7df;--gold:#f0c23b;--teal:#2d7a7a;--plum:#7b64a3;
+  --display:"Iowan Old Style","Charter","Palatino Linotype","Book Antiqua","Songti SC","STSong",serif;
+  --body:"Avenir Next","Avenir","Hiragino Sans GB","PingFang SC","Noto Sans CJK SC",sans-serif;
+  --mono:"SF Mono","JetBrains Mono","IBM Plex Mono","Menlo","Consolas",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(70,55,30,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(70,55,30,.055) 1px,transparent 1px);
+  background-size:28px 28px}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:32px;max-width:1560px;margin:0 auto;padding:44px 36px 96px}
+.mast{grid-column:1/-1;border-bottom:3px double var(--ink);padding-bottom:22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 40px;align-items:end}
+.kicker{grid-column:1/-1;font:600 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
+h1{margin:6px 0 0;font:400 76px/.95 var(--display);letter-spacing:-.02em}
+h1 em{font-style:italic;color:var(--verm)}
+.dek{max-width:740px;margin:12px 0 0;color:var(--soft);font-size:14.5px}
+kbd{font:600 11px var(--mono);border:1px solid var(--rule);border-bottom-width:2px;padding:0 5px;border-radius:3px;background:var(--card);color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(6,auto);border:1px solid var(--ink);background:var(--card)}
+.stat{padding:10px 15px;border-left:1px solid var(--rule)}
+.stat:first-child{border-left:0}
+.stat b{display:block;font:400 34px/1 var(--display)}
+.stat span{font:600 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.stat.hl b{color:var(--verm)}
+.legend{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;margin-top:16px;font-size:12px;color:var(--soft)}
+.legend .it{display:flex;align-items:center;gap:7px}
+.legend svg{display:block}
+main{min-width:0}
+section{margin-top:44px}
+.sh{display:grid;grid-template-columns:auto 1fr;gap:0 16px;align-items:baseline;border-bottom:1px solid var(--ink);padding-bottom:8px;margin-bottom:18px}
+.sh>span{font:italic 400 42px/1 var(--display);color:var(--verm)}
+.sh h2{margin:0;font:400 28px/1.1 var(--display)}
+.sh p{grid-column:2;margin:4px 0 0;color:var(--soft);font-size:13px}
+/* stage map */
+.mapbox{background:var(--card);border:1px solid var(--rule);padding:6px 10px;box-shadow:0 18px 30px -28px rgba(40,30,10,.6)}
+#svg{width:100%;height:auto;display:block}
+#svg text{font-family:var(--mono)}
+.node{cursor:pointer}
+.node .num{font:400 19px var(--display);fill:#fff;text-anchor:middle}
+.node .nm{font-size:12.5px;font-weight:600;fill:var(--ink);text-anchor:middle;paint-order:stroke;stroke:var(--card);stroke-width:5px}
+.node .zh{font-family:var(--body)!important;font-size:11px;fill:var(--soft);text-anchor:middle;paint-order:stroke;stroke:var(--card);stroke-width:5px}
+.node:hover circle{stroke:var(--ink);stroke-width:2.5}
+.edge{cursor:pointer}
+.edge .hit-area{fill:none;stroke:transparent;stroke-width:14}
+.edge .arc{fill:none;stroke:var(--c);stroke-width:2;opacity:.6;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s cubic-bezier(.6,0,.2,1) forwards;animation-delay:var(--d)}
+.edge.back .arc{stroke-width:1.6}
+.edge.opt .arc{stroke-dasharray:.016 .012;stroke-dashoffset:0;animation:fade .8s ease both;animation-delay:var(--d)}
+.edge .lbl circle{fill:var(--card);stroke:var(--c);stroke-width:1.5}
+.edge .lbl text{font-size:10px;font-weight:700;text-anchor:middle;fill:var(--ink)}
+.edge:hover .arc,.edge.hit .arc{opacity:1;stroke-width:3.4}
+.edge.hit .lbl circle{fill:var(--gold)}
+body.focus .edge:not(.hit) .arc{opacity:.14}
+body.focus .edge:not(.hit) .lbl{opacity:.3}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{from{opacity:0}}
+/* lanes */
+.lane{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding:22px 0;border-bottom:1px dashed var(--rule);animation:rise .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i)*70ms);scroll-margin-top:20px}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.lane-h{position:sticky;top:16px;align-self:start}
+.lane-h .big{font:400 64px/.85 var(--display);color:var(--sc)}
+.lane-h .nm{font:700 14px var(--mono);margin-top:8px}
+.lane-h .zh{font-size:12.5px;color:var(--soft)}
+.lane-h .key{font:11px var(--mono);color:var(--faint);margin-top:6px}
+.lane-h .bar{height:5px;background:var(--sc);margin-top:12px;width:56px}
+.order{font-size:12px;color:var(--soft);margin:0 0 12px;padding:6px 10px;border-left:3px solid var(--sc);background:rgba(255,255,255,.45);font-family:var(--mono)}
+.order b{font:600 10px var(--mono);letter-spacing:.12em;color:var(--sc);margin-right:8px}
+.cards{display:flex;flex-wrap:wrap;gap:14px}
+.card{position:relative;width:300px;background:var(--card);border:1px solid var(--rule);border-top:4px solid var(--sc);border-radius:2px;padding:11px 13px 10px;cursor:pointer;
+  box-shadow:0 1px 0 rgba(0,0,0,.03),0 12px 20px -18px rgba(40,30,10,.55);transition:opacity .2s,box-shadow .2s,transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card header{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.card .no{font:600 10px var(--mono);color:var(--sc)}
+.card h4{margin:0;font:700 13.5px var(--mono)}
+.tag{font:600 10.5px var(--body);color:var(--sc);border:1px solid var(--sc);padding:0 5px;border-radius:9px}
+.role{margin:5px 0 0;font-size:12.5px;color:var(--soft);line-height:1.45}
+.io{display:grid;grid-template-columns:32px minmax(0,1fr);gap:7px 6px;margin-top:10px}
+.io .lab{font:700 9.5px/20px var(--mono);letter-spacing:.1em;color:var(--faint)}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{display:inline-block;font:11.5px/1.35 var(--mono);padding:2px 6px;border:1px solid #bfb39c;background:#fff;border-radius:2px;cursor:pointer;max-width:100%;overflow-wrap:anywhere;text-align:left;color:var(--ink);transition:background .15s}
+.chip:hover{border-color:var(--ink)}
+.chip .d{color:var(--faint)}
+.chip sup{font:600 9px var(--body);color:var(--soft);margin-left:4px;top:0;vertical-align:baseline}
+.chip.user{background:repeating-linear-gradient(135deg,#ebe2cf 0 4px,#f6f0e4 4px 8px);border-color:#b9ab8f;font-family:var(--body)}
+.chip.user.path{font-family:var(--mono)}
+.chip.ext{background:#dfeeeb;border-color:var(--teal);font-family:var(--body)}
+.chip.memory{border-style:dotted;font-style:italic;background:transparent;font-family:var(--body)}
+.chip.ref{background:#efeaf6;border-color:#a998c6}
+.chip.ref.todo sup{color:var(--verm)}
+.chip.orphan{border-color:var(--verm);color:var(--verm);background:var(--verm-bg)}
+.chip.orphan::before{content:"⚠";margin-right:4px}
+.chip.opt{border-style:dashed;opacity:.8}
+.chip.m-write{box-shadow:inset 3px 0 0 var(--ink);padding-left:8px}
+.chip.m-write::before{content:"✎";margin-right:4px;font-weight:700}
+.chip.m-save::before{content:"↧";margin-right:4px;color:var(--soft)}
+.chip.hit{background:var(--gold)!important;border-color:#7a5c00!important;color:var(--ink)!important;opacity:1;box-shadow:0 0 0 2px rgba(240,194,59,.35)}
+.stop{margin-top:10px;font-size:12px;color:var(--soft);border-top:1px dashed var(--rule);padding-top:7px}
+.stop b{color:var(--verm);margin-right:4px}
+.stop.none{color:var(--faint)}
+body.focus .card{opacity:.24}
+body.focus .card.on{opacity:1}
+.card.on[data-badge]::after{content:attr(data-badge);position:absolute;top:-11px;right:10px;font:700 10px/1 var(--mono);padding:4px 7px;background:var(--ink);color:#fff;letter-spacing:.04em}
+.card.up{box-shadow:0 0 0 2px var(--sc),0 14px 24px -16px rgba(40,30,10,.6)}
+.card.down{box-shadow:0 0 0 2px var(--ink),0 14px 24px -16px rgba(40,30,10,.6)}
+.card.self{box-shadow:0 0 0 3px var(--gold),0 0 0 4px var(--ink),0 14px 24px -16px rgba(40,30,10,.6)}
+.card.self[data-badge]::after{background:var(--gold);color:var(--ink)}
+/* registry */
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule);font-size:12.5px}
+th{font:700 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--soft);text-align:left;padding:9px 10px;border-bottom:1px solid var(--ink);background:var(--paper2)}
+td{padding:7px 10px;border-bottom:1px solid #ebe4d6;vertical-align:top}
+tr.grp td{font:400 17px var(--display);background:var(--paper);border-bottom:1px solid var(--rule);padding:12px 10px 5px}
+tr.row{cursor:pointer}
+tr.row:hover td{background:#f7f2e8}
+tr.row.hit td{background:#fbf0cd}
+.pill{display:inline-flex;align-items:center;gap:5px;font:11.5px var(--mono);border:1px solid var(--rule);background:#fff;padding:1px 7px 1px 5px;border-radius:10px;margin:1px 3px 1px 0;cursor:pointer;color:var(--ink)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--sc);display:inline-block}
+.pill small{font:10px var(--body);color:var(--soft)}
+.pill.opt{border-style:dashed}
+.pill:hover{border-color:var(--ink)}
+.badge{display:inline-block;font:700 9.5px var(--mono);letter-spacing:.05em;padding:2px 6px;border-radius:2px;margin:1px 3px 1px 0;white-space:nowrap}
+.b-orphan{background:var(--verm);color:#fff}
+.b-term{background:var(--ink);color:#fff}
+.b-user{background:#e4dac5;color:var(--ink)}
+.b-ext{background:var(--teal);color:#fff}
+.b-mem{border:1px dotted var(--soft);color:var(--soft)}
+.b-ref{background:#e3dbf0;color:#4b3a6e}
+.b-todo{border:1px solid var(--verm);color:var(--verm)}
+.b-write{background:var(--ink);color:var(--gold)}
+.b-save{border:1px solid var(--soft);color:var(--soft)}
+.muted{color:var(--faint);font-size:12px}
+.warn{color:var(--verm);font-weight:600;font-size:12px}
+/* rules & notes */
+.gaps{counter-reset:g;display:grid;gap:14px}
+.gap{position:relative;background:var(--card);border:1px solid var(--rule);border-left:5px solid var(--verm);padding:14px 16px 12px 60px}
+.gap.rule{border-left-color:var(--ink)}
+.gap.note{border-left-color:var(--soft)}
+.gap.ok{border-left-color:var(--teal)}
+.gap::before{counter-increment:g;content:counter(g,decimal-leading-zero);position:absolute;left:14px;top:10px;font:italic 400 30px/1 var(--display);color:var(--verm)}
+.gap.rule::before{color:var(--ink)}
+.gap.note::before{color:var(--soft)}
+.gap.ok::before{color:var(--teal)}
+.gap h3{margin:0 0 6px;font:600 15px var(--body)}
+.gap ul{margin:0;padding-left:18px}
+.gap li{margin:5px 0;font-size:13px}
+.sub{font:700 10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:22px 0 10px}
+code{font:12px var(--mono);background:var(--paper2);padding:0 4px;border-radius:2px}
+/* inspector */
+aside{position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;margin-top:44px;background:var(--ink);color:#efe8da;border-radius:2px;box-shadow:0 30px 50px -30px rgba(0,0,0,.6)}
+aside .in{padding:18px 18px 22px}
+.ik{font:700 10px var(--mono);letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+aside h3{margin:6px 0 4px;font:400 23px/1.15 var(--display);color:#fff;overflow-wrap:anywhere}
+aside h3.mono{font:600 15px/1.35 var(--mono)}
+aside h5{margin:18px 0 7px;font:700 10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#b7ad99;border-bottom:1px solid #3a362f;padding-bottom:5px}
+aside p,aside li{font-size:12.5px;color:#d9d1c1}
+aside ul{padding-left:16px;margin:6px 0}
+aside code{background:#2a2722;color:#efe8da}
+aside .pill{background:#2a2722;color:#f3ecdf;border-color:#4a453c}
+aside .pill small{color:#b7ad99}
+aside .chip{color:var(--ink)}
+aside .chip.memory{color:#efe8da;border-color:#9c937f}
+aside .muted{color:#9c937f}
+aside .warn{color:#ff8a65}
+aside .badge.b-term{background:#f3ecdf;color:var(--ink)}
+aside .badge.b-save{color:#d9d1c1;border-color:#9c937f}
+.iorow{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;padding:7px 0;border-bottom:1px dashed #3a362f}
+.iorow .arrow{font:11px var(--mono);color:#9c937f}
+.mode{font:11px var(--body);color:#b7ad99}
+.lg{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:8px 10px;align-items:center;margin-top:8px;font-size:12px;color:#d9d1c1}
+.lg .chip{justify-self:start}
+@media (max-width:1180px){.wrap{grid-template-columns:1fr}aside{position:static;max-height:none;order:-1;margin-top:20px}.mast{grid-template-columns:1fr}}
+@media (max-width:720px){.lane{grid-template-columns:1fr}.lane-h{position:static}h1{font-size:52px}.stats{grid-template-columns:repeat(3,auto)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.edge .arc{stroke-dashoffset:0}.edge:not(.opt) .arc{stroke-dasharray:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="kicker">Agentic Empirical Forge · v1.1.0 · 文档交接全图 · 依据根 <code>SKILL.md</code> <code>## 6</code> + 各 stage <code>SKILL.md</code> agent menu</div>
+    <div>
+      <h1>Handoff <em>Atlas</em></h1>
+      <p class="dek">7 个 stage、20 个 agent 条目。图中节点是材料名称，不规定文件路径：输入可以来自任何位置和格式；输出默认在对话中给出，用户要求时才保存，位置由用户指定；AEF02 / AEF03 只做 design、不写代码；表格、manuscript 正文在用户确认文件清单后写入。点文件 chip、agent 卡片或弧线看上下游，<kbd>Esc</kbd> 或点空白处清除。</p>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="legend" id="legend"></div>
+  </header>
+
+  <main>
+    <section id="map">
+      <div class="sh"><span>1</span><h2>Stage map</h2><p>弧线 = 跨 stage 交接，圆圈数字 = 文件数。上方顺流、下方回流；虚线 = 下游只把这些文件当可选输入。</p></div>
+      <div class="mapbox"><svg id="svg" viewBox="0 0 1000 330" role="img" aria-label="Stage map"></svg></div>
+    </section>
+    <section id="lanes">
+      <div class="sh"><span>2</span><h2>Agent handoff</h2><p>每张卡片 = agent menu 的一个条目。IN = 常见输入来源；OUT = 产出及其写入方式；REF = agent 查阅的 <code>references/</code> 文档。</p></div>
+      <div id="lanebox"></div>
+    </section>
+    <section id="reg">
+      <div class="sh"><span>3</span><h2>Artifact registry</h2><p>所有出现在 IN / OUT / REF 中的材料，按类型分组；Producer / Consumer 由 agent menu 自动推导。</p></div>
+      <table id="regtable"></table>
+    </section>
+    <section id="rules">
+      <div class="sh"><span>4</span><h2>I/O 规则与注记</h2><p>根 <code>SKILL.md</code> <code>## 6</code> 的三条规则，以及按新规则仍需注意的地方。</p></div>
+      <div class="gaps" id="rulebox"></div>
+      <div class="sub">仍需注意</div>
+      <div class="gaps" id="notebox"></div>
+    </section>
+  </main>
+
+  <aside id="insp"><div class="in" id="inspin"></div></aside>
+</div>
+
+<script>
+const S=[
+  {id:'01',key:'AEF01_explore',name:'explore',zh:'研究问题生成',c:'#2f6f4f',order:'data-description-builder → idea-scout → literature-reviewer → proposal-drafter'},
+  {id:'02',key:'AEF02_identify',name:'identify',zh:'baseline 识别设计',c:'#1f5f8b',order:'credible-baseline-identifier → 用户按设计自行跑 baseline → AEF03'},
+  {id:'03',key:'AEF03_extend',name:'extend',zh:'扩展设计 · storytelling',c:'#6b4c9a',order:'扩展设计 → 用户自行跑分析 → 结果筛选 → storytelling → AEF04'},
+  {id:'04',key:'AEF04_writeup',name:'writeup',zh:'写作与内审',c:'#b5651d',order:'writer（综述与 citation 检查转给 literature-reviewer）→ reviewer（2–3 份 referee comments → review report）→ writer 修订 → reviewer 第 2 轮（≤2 轮）'},
+  {id:'05',key:'AEF05_exclusivity',name:'exclusivity',zh:'期刊定制',c:'#8b2f4f',order:'journal-profiler（本地 corpus 或 OpenAlex）→ journal-tailor'},
+  {id:'06',key:'AEF06_connection',name:'connection',zh:'人脉 · 提名 · cover letter',c:'#2d7a7a',order:'connection-scout → reviewer-profiler → cover-letter-writer'},
+  {id:'07',key:'AEF07_rebuttal',name:'rebuttal',zh:'审稿回复',c:'#6d6a1f',order:'comment-decomposer → response-planner →（回 02–04 改论文）→ response-letter-writer → response-polisher → consistency-checker'},
+];
+const SH=['shared/citation-rules.md','shared/openalex-protocol.md'];
+const W=(f,o)=>({f,mode:'write',...(o||{})});
+const RF=(st,n)=>`${st}/references/${n}.md`;
+const A=[
+  {id:'dsb',stage:'01',name:'data-description-builder',role:'把模糊想法 / 零散 source 追问成标准化数据说明，并画像数据、理清数据能支持的 identification；不写 RQ',in:['用户：想法 / source / data 描述'],out:['DATA_DESCRIPTION.md','Identification Profile','数据缺口清单'],stop:'用户确认未解决的数据缺口（如有）',rules:['templates/data-description-template.md']},
+  {id:'idea',stage:'01',name:'idea-scout',role:'生成 3-5 个候选 RQ：机制、数据匹配、识别策略、锚点文献、可行性；无固定输出格式',in:['DATA_DESCRIPTION.md','Identification Profile'],out:['候选 idea','待验证文献清单'],stop:'用户选定 idea，或直接给出 effect of interest',rules:['shared/citation-rules.md','templates/idea-template.md（可选参考）']},
+  {id:'lit',stage:'01',name:'literature-reviewer',role:'OpenAlex + doi.org 批量验证文献、claim 与 abstract 一致性、reference 格式、按需撰写 literature review；被 writer 调用',in:['待验证文献清单',{f:'OpenAlex API',tag:'批量检索'},{f:'manuscript',opt:1,tag:'claim 核查'},{f:'references.bib',opt:1,tag:'格式整理'}],out:['literature review',{f:'references.bib',tag:'要求时追加'}],stop:'批量 OpenAlex 检索前确认范围；综述前确认 scope；改 manuscript / .bib 前确认修改清单',rules:SH},
+  {id:'prop',stage:'01',name:'proposal-drafter',role:'基于 idea 描述 + literature review 起草 research proposal；缺任何一项就停下问用户',in:[{f:'候选 idea',tag:'或用户的 idea 描述'},'literature review',{f:'DATA_DESCRIPTION.md',opt:1},{f:'Identification Profile',opt:1},{f:'references.bib',opt:1}],out:['proposal'],stop:'缺 idea 描述或 literature review 时停下；用户确认 proposal',rules:['shared/citation-rules.md']},
+
+  {id:'cbi',stage:'02',name:'credible-baseline-identifier',role:'只做 design：estimand、specification、FE、clustering、good / bad controls、assumptions 与检验、alternative explanations、threats',in:[{f:'proposal',tag:'或口头研究设计'},'DATA_DESCRIPTION.md',{f:'Identification Profile',opt:1},{f:'用户：已跑出的结果',opt:1}],out:['baseline design'],ref:[RF('AEF02_identify','oster'),RF('AEF02_identify','causal-ml'),RF('AEF02_identify','conley'),RF('AEF02_identify','good-bad-controls')],stop:'设计完成后用户决定采用、修改或 pivot',rules:[]},
+
+  {id:'ext',stage:'03',name:'extension-designer',tag:'扩展设计',role:'基于 credible baseline 设计 mechanism、heterogeneity 与其他 insightful 的分析；只做 design',in:['baseline design','用户：已跑出的结果'],out:['extension design'],ref:[RF('AEF03_extend','identification-checklist'),RF('AEF03_extend','mechanisms'),RF('AEF03_extend','policy-learning')],stop:'用户在设计中选择范围与优先级',rules:[]},
+  {id:'tri',stage:'03',name:'extension-designer',tag:'结果筛选',role:'对用户提供的每个扩展结果打 WORK / NOT WORK / MARGINAL 标签',in:['用户：已跑出的结果'],out:[{f:'results log',tag:'加标签'}],stop:'确认哪些结果进入 storytelling',rules:['agents/extension-designer.md § Triage Criteria']},
+  {id:'story',stage:'03',name:'extension-designer',tag:'storytelling',role:'把保留结果串成主线、稳健性、机制、异质性与 contribution story',in:[{f:'results log',tag:'已筛选'},'tables','figures'],out:['storytelling 蓝图'],stop:'审阅叙事逻辑',rules:['templates/storytelling-template.md']},
+
+  {id:'writer',stage:'04',name:'writer',role:'只负责写作：以 storytelling 为骨架写论文（默认 LaTeX，可出 Word）；不确定的数字留 [[NUM]]，确定的数字注明来源',in:['storytelling 蓝图',{f:'outline',opt:1,tag:'有则用'},'tables','figures','literature review','references.bib',{f:'review report',opt:1,tag:'修订轮'}],out:[{f:'outline',tag:'没有时先提出'},W('manuscript',{tag:'LaTeX 或 .docx'}),{f:'待验证文献清单',opt:1,note:'综述与 citation 检查转给 literature-reviewer'}],stop:'动笔前确认 outline 与要写入的文件清单；完成后审阅草稿',rules:['shared/citation-rules.md','shared/writing-principles.md']},
+  {id:'rev',stage:'04',name:'reviewer',role:'2–3 份独立 referee comments（一份刻意苛刻：假设挑战 + 伦理审查，可判 BLOCKED）→ 组装成附 revision priority 的 review report；第 2 轮核对修订',in:[{f:'manuscript',tag:'任意格式'},{f:'results log',opt:1},{f:'storytelling 蓝图',opt:1},{f:'literature review',opt:1},{f:'review report',opt:1,tag:'第 2 轮'},{f:'用户：外部 / 合作者审查意见',opt:1}],out:['review report'],ref:[RF('AEF04_writeup','review-criteria'),RF('AEF04_writeup','common-rejection-reasons')],stop:'开始前确认 referee 数量与外部意见；完成后确认 revision priority；第 2 轮后决定是否继续',rules:['templates/review-report-template.md','templates/revision-priority-template.md']},
+
+  {id:'prof',stage:'05',name:'journal-profiler',role:'对目标期刊已发表论文做文献综述（本地或 OpenAlex），提炼 topics、methods、framing、contribution style、section 结构、偏好与排斥项；多刊时每刊一份 + 对比',in:['用户：目标 journal 列表',{f:'用户：journal corpus',opt:1},{f:'OpenAlex API',tag:'没有 corpus 时'},{f:'manuscript',opt:1,tag:'对照'}],out:['Exclusivity Document'],stop:'开始前确认 journal 与 corpus；OpenAlex 检索前确认期刊、时间窗、topic 与样本量；完成后审阅',rules:[...SH,'templates/journal-profile-template.md','templates/journal-fit-report-template.md']},
+  {id:'tail',stage:'05',name:'journal-tailor',role:'对照 Exclusivity Document 给出修改建议：先结构 / framing / 语气，再细节；用户要求时才改稿',in:['Exclusivity Document',{f:'manuscript',tag:'任意格式'}],out:['exclusivity revision notes',W('manuscript',{tag:'确认后改 · 或 .docx'})],stop:'动手改前确认修改方向与文件清单（含 Open Decisions for User）',rules:['templates/journal-fit-report-template.md','shared/writing-principles.md']},
+
+  {id:'cs',stage:'06',name:'connection-scout',role:'追问合作、会议、seminar、访问、通信等渠道，保守估计关系强度',in:['用户：学术活动与接触记录'],out:['Connection Document'],stop:'审阅并补充 Connection Document',rules:['templates/connection-file-template.md']},
+  {id:'rprof',stage:'06',name:'reviewer-profiler',role:'对 SE/DE、AE、潜在 reviewer 的发表记录做文献综述：候选 + 基于 verified 文献的 justification、风险名单，追问 Connection Leads',in:['用户：目标期刊',{f:'manuscript',tag:'或摘要'},{f:'OpenAlex API',tag:'发表记录'},{f:'Exclusivity Document',opt:1},{f:'Connection Document',opt:1}],out:['potential reviewer document'],ref:[RF('AEF06_connection','nomination-strategy')],stop:'批量检索前确认候选范围；确认 connection leads、nomination / exclusion 方向',rules:[...SH,'templates/nomination-report-template.md']},
+
+  {id:'clw',stage:'06',name:'cover-letter-writer',role:'结合 connection 与 nomination 写 cover letter + submission protection strategy',in:['Connection Document','potential reviewer document','manuscript','用户：目标期刊',{f:'Exclusivity Document',opt:1}],out:['cover letter','submission protection notes'],ref:[RF('AEF06_connection','cover-letter-guide')],stop:'审阅 cover letter 与 protection notes（含 User Decisions Needed）',rules:['templates/cover-letter-template.md','shared/writing-principles.md']},
+
+  {id:'cd',stage:'07',name:'comment-decomposer',role:'零遗漏拆成 SE-1 / AE-1 / R1-1… comment units，简单项直接起草回复',in:['reviewer comments','decision letter',{f:'manuscript',opt:1}],out:['response letter skeleton'],ref:[RF('AEF07_rebuttal','revision-best-practices')],stop:'确认拆分完整、分组合理',rules:['templates/response-letter-template.md','shared/writing-principles.md']},
+  {id:'rp',stage:'07',name:'response-planner',role:'逐条提出可迭代的回应方案，不明确处与用户多轮讨论',in:['response letter skeleton',{f:'manuscript',opt:1},{f:'Exclusivity Document',opt:1},{f:'tables',opt:1}],out:['response strategy','revision tracking'],ref:[RF('AEF07_rebuttal','response-strategy'),RF('AEF07_rebuttal','revision-best-practices')],stop:'逐条讨论不明确的 comment，确认回应方案',rules:['templates/response-letter-template.md','templates/revision-tracking-template.md','shared/writing-principles.md']},
+  {id:'rlw',stage:'07',name:'response-letter-writer',role:'editor 部分整合回复（≤3 个 integrated 点），reviewer 部分点对点成文',in:[{f:'response letter skeleton',tag:'首选'},{f:'decision letter',opt:1},{f:'reviewer comments',opt:1},'用户：reviewer 逐条回复',{f:'response strategy',opt:1},{f:'revision tracking',opt:1},{f:'manuscript',opt:1}],out:[{f:'response letter',tag:'认可后可出 .docx'},'response letter notes'],ref:[RF('AEF07_rebuttal','response-letter-guide'),RF('AEF07_rebuttal','response-polishing-guide')],stop:'审阅 letter；确认未回复点、缺失修改位置、>3 点时的取舍',rules:['templates/response-letter-template.md','shared/writing-principles.md']},
+  {id:'pol',stage:'07',name:'response-polisher',role:'只润色语言（称呼、立场、语气、结构），不改实质内容，逐点核对覆盖',in:[{f:'response letter',tag:'或 .docx'},{f:'reviewer comments',opt:1},{f:'response letter skeleton',opt:1}],out:[{f:'polished response letter',tag:'认可后可出 .docx'},'polishing notes'],ref:[RF('AEF07_rebuttal','response-polishing-guide')],stop:'审阅润色稿、未回应的点和需确认项',rules:['shared/writing-principles.md']},
+  {id:'chk',stage:'07',name:'consistency-checker',role:'sample size、术语、cross-ref、承诺兑现；只报告，不改文件',in:['用户：manuscript / letter / appendix',{f:'response letter',opt:1},{f:'polished response letter',opt:1},{f:'reviewer comments',opt:1},{f:'revision tracking',opt:1}],out:['consistency report'],ref:[RF('AEF07_rebuttal','consistency-checklist'),RF('AEF07_rebuttal','revision-best-practices')],stop:'逐条确认 Needs user confirmation 项',rules:[]},
+];
+const F={
+  '用户：想法 / source / data 描述':{kind:'user',label:1},
+  '用户：已跑出的结果':{kind:'user',label:1,note:'用户按 design 自行跑代码得到的 results log、表格或总结，任意格式；agent 不写代码、不跑代码'},
+  'tables':{kind:'user',label:1,note:'用户自行跑分析产出；writer 通过 \\input{} 或来源标注引用；不编造数字'},
+  'figures':{kind:'user',label:1,note:'用户自行跑分析产出'},
+  '用户：目标 journal 列表':{kind:'user',label:1,note:'一本或多本，口头说明即可'},
+  '用户：journal corpus':{kind:'user',label:1,note:'本地论文 / PDF；没有时通过 OpenAlex 检索'},
+  'OpenAlex API':{kind:'ext',label:1,note:'按 shared/openalex-protocol.md 访问：polite pool、限速、重试、分页、fallback 到 doi.org / Crossref；批量检索前停下确认；只基于摘要的结论标 [abstract-only]'},
+  '用户：目标期刊':{kind:'user',label:1,note:'口头说明即可'},
+  '用户：学术活动与接触记录':{kind:'user',label:1},
+  '用户：外部 / 合作者审查意见':{kind:'user',label:1,note:'任意格式；reviewer 并入 review report 的综合'},
+  'reviewer comments':{kind:'user',label:1,note:'也可直接粘贴或给 .docx'},
+  'decision letter':{kind:'user',label:1,note:'也可直接粘贴或给 .docx'},
+  '用户：reviewer 逐条回复':{kind:'user',label:1,note:'草稿、要点或 .docx'},
+  '用户：manuscript / letter / appendix':{kind:'user',label:1,note:'任意组合，通常 .docx'},
+  'Identification Profile':{kind:'memory',label:1,note:'data-description-builder 产出的字段分类、identification support 与数据限制；默认不落盘'},
+  '候选 idea':{kind:'memory',label:1,note:'idea-scout 在对话中给出；用户要求时才输出文件，格式跟随用户'},
+  '待验证文献清单':{kind:'memory',label:1,note:'idea-scout 的锚点文献，或 writer / 用户新增的引用'},
+  '数据缺口清单':{kind:'memory',label:1,note:'随回复交给用户确认'},
+  'manuscript':{note:'manuscript；作为输入时 .tex / .docx / .pdf / .txt 均可；writer 可按要求出 .docx'},
+  'storytelling 蓝图':{note:'writer 的叙事依据；文件、.docx 或粘贴均可'},
+  'outline':{note:'没有时 writer 先在对话中提出 outline，确认后再动笔'},
+  'literature review':{note:'literature-reviewer 产出；用户要求时可出 .docx（docx skill）'},
+  'review report':{note:'reviewer 产出：2–3 份 referee comments + revision priority + editorial decision'},
+  [RF('AEF02_identify','oster')]:{kind:'ref',st:'总结 TODO',note:'Oster (2019, JBES)；Altonji, Elder & Taber (2005, JPE)'},
+  [RF('AEF02_identify','causal-ml')]:{kind:'ref',st:'总结 TODO',note:'Chernozhukov et al. (2018)；Wager & Athey (2018)；Athey, Tibshirani & Wager (2019)'},
+  [RF('AEF02_identify','conley')]:{kind:'ref',st:'总结 TODO',note:'Conley, Hansen & Rossi (2012) Plausibly Exogenous, REStat'},
+  [RF('AEF02_identify','good-bad-controls')]:{kind:'ref',st:'总结 TODO',note:'Cinelli, Forney & Pearl (2024, SMR)'},
+  [RF('AEF03_extend','identification-checklist')]:{kind:'ref',note:'DID / IV / RDD 等识别策略的适用条件与必报项'},
+  [RF('AEF03_extend','mechanisms')]:{kind:'ref',st:'全部 TODO',note:'文献与总结均待补'},
+  [RF('AEF03_extend','policy-learning')]:{kind:'ref',st:'全部 TODO',note:'文献与总结均待补'},
+  [RF('AEF04_writeup','review-criteria')]:{kind:'ref'},
+  [RF('AEF04_writeup','common-rejection-reasons')]:{kind:'ref'},
+  [RF('AEF06_connection','nomination-strategy')]:{kind:'ref'},
+  [RF('AEF06_connection','cover-letter-guide')]:{kind:'ref'},
+  [RF('AEF07_rebuttal','revision-best-practices')]:{kind:'ref'},
+  [RF('AEF07_rebuttal','response-strategy')]:{kind:'ref'},
+  [RF('AEF07_rebuttal','response-letter-guide')]:{kind:'ref'},
+  [RF('AEF07_rebuttal','response-polishing-guide')]:{kind:'ref'},
+  [RF('AEF07_rebuttal','consistency-checklist')]:{kind:'ref'},
+};
+const MODE={save:'对话中给出，要求时保存（位置由用户指定）',write:'确认文件清单后写入',memory:'对话内交接，不落盘'};
+
+/* ---------- model ---------- */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const R=x=>typeof x==='string'?{f:x}:x;
+const stage=id=>S.find(s=>s.id===id);
+A.forEach(a=>{a.in=a.in.map(R);a.out=a.out.map(R).map(r=>({mode:F[r.f]?.kind==='memory'?'memory':'save',...r}));a.ref=a.ref||[];a.st=stage(a.stage)});
+S.forEach(s=>A.filter(a=>a.stage===s.id).forEach((a,i)=>a.idx=i+1));
+const AG=Object.fromEntries(A.map(a=>[a.id,a]));
+const isG=f=>f.includes('*');
+const gre=g=>new RegExp('^'+g.replace(/[.+^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'[^/]*')+'$');
+const rel=f=>g=>g===f||(isG(g)&&!isG(f)&&gre(g).test(f))||(isG(f)&&!isG(g)&&gre(f).test(g));
+const ALL=[...new Set([...Object.keys(F),...A.flatMap(a=>[...a.in,...a.out].map(r=>r.f)),...A.flatMap(a=>a.ref)])];
+const prods=f=>A.filter(a=>a.out.some(r=>r.f===f||(isG(f)&&!isG(r.f)&&gre(f).test(r.f))));
+const cons=f=>A.filter(a=>a.in.some(r=>rel(f)(r.f))||a.ref.includes(f));
+const optFor=(a,f)=>{const m=a.in.filter(r=>rel(f)(r.f));return m.length>0&&m.every(r=>r.opt)};
+const modesOf=f=>[...new Set(prods(f).flatMap(a=>a.out.filter(r=>rel(f)(r.f)).map(r=>r.mode)))];
+const kind=f=>F[f]?.kind||(prods(f).length?'artifact':'orphan');
+const terminal=f=>kind(f)==='artifact'&&!cons(f).length;
+const isTodo=f=>/TODO/.test(F[f]?.st||'');
+
+/* ---------- atoms ---------- */
+function split(f){if(F[f]?.label||!f.includes('/'))return['',f];
+  if(kind(f)==='ref'){const i=f.lastIndexOf('/');return[f.slice(0,i+1).replace(/^(AEF0\d)_[a-z]+\//,'$1/'),f.slice(i+1)]}
+  const t=f.endsWith('/')?f.slice(0,-1):f,i=t.lastIndexOf('/');return i<0?['',f]:[f.slice(0,i+1),f.slice(i+1)]}
+function chip(r,out){r=R(r);const k=kind(r.f),[d,b]=split(r.f);
+  const cls=['chip',k,r.opt?'opt':'',k==='user'&&!F[r.f]?.label?'path':'',out&&r.mode!=='memory'?'m-'+r.mode:'',isTodo(r.f)?'todo':''].join(' ');
+  const sup=[r.opt?'opt':'',r.tag||'',k==='ref'?F[r.f]?.st||'':''].filter(Boolean).join(' · ');
+  const title=[r.f,out?MODE[r.mode]:'',r.note,F[r.f]?.note].filter(Boolean).join(' — ');
+  return `<button class="${cls}" data-f="${esc(r.f)}" title="${esc(title)}">${d?`<span class="d">${esc(d)}</span>`:''}${esc(b)}${sup?`<sup>${esc(sup)}</sup>`:''}</button>`}
+function pill(a,opt){return `<button class="pill${opt?' opt':''}" data-a="${a.id}" style="--sc:${a.st.c}"><i></i>${esc(a.name)}${a.tag?` <small>${esc(a.tag)}</small>`:''}</button>`}
+function badges(f){const k=kind(f),b=[],m=modesOf(f);
+  if(k==='orphan')b.push('<span class="badge b-orphan">无来源</span>');
+  if(k==='user')b.push('<span class="badge b-user">用户提供</span>');
+  if(k==='ext')b.push('<span class="badge b-ext">外部检索</span>');
+  if(k==='memory')b.push('<span class="badge b-mem">in-memory</span>');
+  if(k==='ref')b.push('<span class="badge b-ref">agent 查阅</span>'+(F[f]?.st?`<span class="badge b-todo">${esc(F[f].st)}</span>`:''));
+  if(k!=='memory'&&m.includes('write'))b.push('<span class="badge b-write">✎ 确认后写入</span>');
+  if(k!=='memory'&&m.includes('save'))b.push('<span class="badge b-save">↧ 要求时保存</span>');
+  if(terminal(f))b.push('<span class="badge b-term">终点 → User</span>');
+  return b.join('')}
+
+/* ---------- header ---------- */
+const EDGES=(()=>{const m=new Map();
+  A.forEach(c=>c.in.forEach(r=>prods(r.f).forEach(p=>{if(p.stage===c.stage)return;const k=p.stage+'>'+c.stage;
+    if(!m.has(k))m.set(k,{from:p.stage,to:c.stage,items:[]});m.get(k).items.push({f:r.f,p,c,opt:!!r.opt})})));
+  return[...m.values()].map(e=>({...e,allOpt:e.items.every(t=>t.opt)}))})();
+const REFS=ALL.filter(f=>kind(f)==='ref'),FILES=ALL.filter(f=>kind(f)!=='ref');
+const WRITES=A.flatMap(a=>a.out.filter(r=>r.mode==='write').map(r=>({a,r})));
+const orphans=ALL.filter(f=>kind(f)==='orphan');
+$('#stats').innerHTML=[[S.length,'stages'],[A.length,'agent 条目'],[FILES.length,'输入 / 输出'],[EDGES.length,'跨 stage 交接'],[WRITES.length,'确认后写入'],[REFS.length,'参考文档']]
+  .map(([n,l],i)=>`<div class="stat${i===4?' hl':''}"><b>${n}</b><span>${l}</span></div>`).join('');
+const LG=[[chip('results log'),'agent 产出'],[chip('用户：已跑出的结果'),'用户提供'],[chip('OpenAlex API'),'外部检索'],[chip('Identification Profile'),'in-memory'],
+  [chip({f:'manuscript',opt:1}),'可选输入'],[chip({f:'proposal',mode:'save'},1),'对话中给出，要求时保存'],[chip({f:'manuscript',mode:'write'},1),'确认文件清单后写入'],[chip(RF('AEF03_extend','mechanisms')),'agent 查阅的 references']];
+$('#legend').innerHTML=LG.map(([c,t])=>`<div class="it">${c} ${t}</div>`).join('')+
+  `<div class="it"><svg width="34" height="10"><path d="M2 5H32" stroke="#1c1a16" stroke-width="2"/></svg> 交接</div><div class="it"><svg width="34" height="10"><path d="M2 5H32" stroke="#1c1a16" stroke-width="2" stroke-dasharray="4 3"/></svg> 仅可选输入</div>`;
+
+/* ---------- stage map ---------- */
+(function drawMap(){
+  const W=1000,y0=190,r=24,xs=S.map((_,i)=>90+i*(W-180)/6),I=id=>S.findIndex(s=>s.id===id),X=id=>xs[I(id)];
+  const defs='<defs>'+S.map(s=>`<marker id="m-${s.id}" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="${s.c}"/></marker>`).join('')+'</defs>';
+  const line=xs.slice(0,-1).map((x,i)=>`<line x1="${x}" y1="${y0}" x2="${xs[i+1]}" y2="${y0}" stroke="${S[i].c}" stroke-width="6" stroke-linecap="round" opacity=".35"/>`).join('');
+  const arc=(x1,x2,h,below)=>{const sg=below?1:-1,yb=y0+sg*r,xm=(x1+x2)/2;return{d:`M${x1} ${yb} Q${xm} ${yb+sg*2*h} ${x2} ${yb}`,xm,ya:yb+sg*h}};
+  const arcs=EDGES.map((e,i)=>{const span=Math.abs(I(e.to)-I(e.from)),fwd=I(e.to)>I(e.from),h=fwd?24+span*21:24+span*14;
+    const {d,xm,ya}=arc(X(e.from),X(e.to),h,!fwd),n=new Set(e.items.map(t=>t.f)).size;
+    return `<g class="edge ${fwd?'fwd':'back'}${e.allOpt?' opt':''}" data-i="${i}" style="--c:${stage(e.from).c};--d:${300+i*55}ms"><title>${esc([...new Set(e.items.map(t=>t.f))].join('\n'))}</title><path class="hit-area" d="${d}"/><path class="arc" pathLength="1" d="${d}" marker-end="url(#m-${e.from})"/><g class="lbl" transform="translate(${xm} ${ya})"><circle r="10"/><text dy="3.5">${n}</text></g></g>`}).join('');
+  const nodes=S.map((s,i)=>`<g class="node" data-s="${s.id}" transform="translate(${xs[i]} ${y0})"><circle r="${r}" fill="${s.c}" stroke="#fbf8f2" stroke-width="3"/><text class="num" dy="6.5">${s.id}</text><text class="nm" y="${r+17}">${s.name}</text><text class="zh" y="${r+32}">${esc(s.zh)}</text></g>`).join('');
+  $('#svg').innerHTML=defs+line+arcs+nodes;
+})();
+
+/* ---------- lanes ---------- */
+function card(a){return `<article class="card" id="ag-${a.id}" data-card="${a.id}" style="--sc:${a.st.c}">
+  <header><span class="no">${a.stage}·${a.idx}</span><h4>${esc(a.name)}</h4>${a.tag?`<span class="tag">${esc(a.tag)}</span>`:''}</header>
+  <p class="role">${esc(a.role)}</p>
+  <div class="io"><span class="lab">IN</span><div class="chips">${a.in.map(r=>chip(r)).join('')}</div><span class="lab">OUT</span><div class="chips">${a.out.map(r=>chip(r,1)).join('')}</div>
+  ${a.ref.length?`<span class="lab">REF</span><div class="chips">${a.ref.map(f=>chip(f)).join('')}</div>`:''}</div>
+  <div class="stop${a.stop?'':' none'}"><b>★</b>${esc(a.stop||'无停下点，直接交给下游')}</div></article>`}
+$('#lanebox').innerHTML=S.map((s,i)=>`<div class="lane" id="lane-${s.id}" style="--sc:${s.c};--i:${i}">
+  <div class="lane-h"><div class="big">${s.id}</div><div class="nm">${s.name}</div><div class="zh">${esc(s.zh)}</div><div class="key">${s.key}</div><div class="bar"></div></div>
+  <div><p class="order"><b>典型顺序</b>${esc(s.order)}</p><div class="cards">${A.filter(a=>a.stage===s.id).map(card).join('')}</div></div></div>`).join('');
+
+/* ---------- registry ---------- */
+(function reg(){
+  const groups=[['用户提供 / 外部检索',f=>['user','ext'].includes(kind(f))],['in-memory（对话内交接）',f=>kind(f)==='memory'],
+    ['agent 产出',f=>['artifact','orphan'].includes(kind(f))],['references/（agent 查阅，用户维护）',f=>kind(f)==='ref']];
+  const seen=new Set(),firstStage=f=>(prods(f)[0]||cons(f)[0]||{stage:'99'}).stage;
+  let h='<thead><tr><th>文件 / 材料</th><th>Producer（写 / 给出）</th><th>Consumer（读 / 查阅）</th><th>状态</th></tr></thead><tbody>';
+  groups.forEach(([g,pred])=>{const fs=ALL.filter(f=>!seen.has(f)&&pred(f)).sort((a,b)=>firstStage(a).localeCompare(firstStage(b))||a.localeCompare(b));
+    if(!fs.length)return;fs.forEach(f=>seen.add(f));h+=`<tr class="grp"><td colspan="4">${esc(g)}</td></tr>`;
+    fs.forEach(f=>{const P=prods(f),C=cons(f),k=kind(f);h+=`<tr class="row" data-f="${esc(f)}"><td>${chip(f)}</td>
+      <td>${P.map(a=>pill(a)).join('')||(k==='user'?'<span class="muted">用户</span>':k==='ext'?'<span class="muted">OpenAlex</span>':k==='ref'?'<span class="muted">用户维护</span>':'<span class="warn">—</span>')}</td>
+      <td>${C.map(a=>pill(a,optFor(a,f))).join('')||'<span class="muted">User</span>'}</td><td>${badges(f)}</td></tr>`})});
+  $('#regtable').innerHTML=h+'</tbody>';
+})();
+
+/* ---------- rules & notes ---------- */
+const users=ALL.filter(f=>['user','ext'].includes(kind(f)));
+const byAgent=new Map();WRITES.forEach(({a,r})=>{if(!byAgent.has(a))byAgent.set(a,[]);byAgent.get(a).push(r)});
+const saveOnly=A.filter(a=>a.out.every(r=>r.mode!=='write'));
+$('#rulebox').innerHTML=`
+<div class="gap rule"><h3>输入不设限</h3><ul>
+  <li>menu 与 agent 里的路径只是常见来源示例；用户说明材料在哪即可，<code>.md</code>、<code>.docx</code>、<code>.txt</code>、<code>.pdf</code>、<code>.tex</code> 或直接粘贴都接受，<code>.docx</code> 用 <code>pandoc -t markdown</code> 读取</li>
+  <li>材料不足时先问用户，不因缺某个指定文件拒绝执行</li>
+  <li>由用户直接提供的材料（${users.length} 项）：${users.map(f=>chip(f)).join(' ')}</li></ul></div>
+<div class="gap rule"><h3>输出默认不落盘</h3><ul>
+  <li>第一步永远不写文件：${saveOnly.length} / ${A.length} 个 agent 条目只在对话中给出结果，用户要求保存时才写，位置与格式由用户指定（<code>.md</code> / <code>.docx</code>）</li>
+  <li>例外：表格、manuscript 正文必须写文件，动手前列出文件清单等用户确认（${WRITES.length} 处）；AEF02 / AEF03 只做 design，脚本与表格由用户自行产出：<ul>
+  ${[...byAgent].map(([a,rs])=>`<li>${pill(a)} ${rs.map(r=>chip(r,1)).join(' ')}</li>`).join('')}</ul></li></ul></div>
+<div class="gap rule"><h3>不编造数字</h3><ul>
+  <li>不确定的数字留 placeholder <code>[[NUM: 说明]]</code>，不估算、不凭印象填写</li>
+  <li>确定的数字注明来源脚本与表格（脚本由用户运行）：LaTeX 用 <code>\\input{}</code> 或行尾 <code>%</code> 注释；Word / Markdown 用 <code>[src: &lt;script&gt; → &lt;table&gt;]</code>，投稿前由用户清理</li>
+  <li>主要涉及：${pill(AG.cbi)} ${pill(AG.story)} ${pill(AG.writer)}</li></ul></div>`;
+$('#notebox').innerHTML=`
+${orphans.length?`<div class="gap"><h3>没有来源的输入（${orphans.length}）</h3><ul>${orphans.map(f=>`<li>${chip(f)}</li>`).join('')}</ul></div>`
+  :`<div class="gap ok"><h3>每个输入都有来源</h3><ul><li>所有 IN 都能追到某个 agent 的产出、用户提供的材料或 OpenAlex</li></ul></div>`}
+<div class="gap"><h3>方法文档待补内容</h3><ul>
+  <li>${REFS.filter(isTodo).map(f=>chip(f)).join(' ')}</li>
+  <li>agent 读到 <code>TODO</code> 时会如实告诉用户，不按自身记忆补写方法内容</li></ul></div>
+<div class="gap"><h3>跨 session 接续</h3><ul>
+  <li>结果默认不落盘，新 session 里根 <code>SKILL.md</code> 只看对话判断进度；需要跨 session 接着做的结果，记得要求保存并在新 session 中给出</li>
+  <li>${chip('Identification Profile')}、${chip('候选 idea')}、${chip('待验证文献清单')} 只在对话内交接，新 session 需要重跑 data-description-builder / idea-scout 或重新给出文献清单</li></ul></div>`;
+
+/* ---------- interaction ---------- */
+const insp=$('#inspin');
+function clear(){document.body.classList.remove('focus');
+  $$('.card').forEach(c=>{c.classList.remove('on','up','down','self');delete c.dataset.badge});
+  $$('.hit').forEach(e=>e.classList.remove('hit'));inspHome()}
+function mark(a,cls,badge){const el=$('#ag-'+a.id);el.classList.add('on',cls);el.dataset.badge=badge}
+const KL={artifact:'项目文件',user:'用户提供',ext:'外部检索',memory:'in-memory',ref:'references',orphan:'无来源'};
+function selectFile(f){clear();document.body.classList.add('focus');const m=rel(f),k=kind(f);
+  $$('.chip').forEach(c=>m(c.dataset.f)&&c.classList.add('hit'));
+  $$('tr.row').forEach(t=>m(t.dataset.f)&&t.classList.add('hit'));
+  $$('.edge').forEach(g=>EDGES[g.dataset.i].items.some(t=>m(t.f))&&g.classList.add('hit'));
+  const P=prods(f),C=cons(f);
+  A.forEach(a=>{const p=P.includes(a),c=C.includes(a);if(p&&c)mark(a,'up','读 + 写');else if(p)mark(a,'up','写 producer');else if(c)mark(a,'down',k==='ref'?'查阅':'读 consumer')});
+  const pm=a=>a.out.filter(r=>m(r.f)).map(r=>MODE[r.mode]).join('；');
+  insp.innerHTML=`<div class="ik">FILE · ${KL[k]}</div><h3 class="mono">${esc(f)}</h3><div>${badges(f)}</div>
+  ${F[f]?.note?`<p>${esc(F[f].note)}</p>`:''}
+  ${k==='ref'?'':`<h5>Producer · 写 / 给出（${P.length}）</h5>${P.map(a=>`<div class="iorow">${pill(a)}<span class="mode">${esc(pm(a))}</span></div>`).join('')||`<span class="muted">${k==='user'?'由用户提供，位置与格式不限':k==='ext'?'OpenAlex 检索':'没有 agent 产出'}</span>`}`}
+  <h5>${k==='ref'?'查阅者':'Consumer · 读'}（${C.length}）</h5>${C.map(a=>pill(a,optFor(a,f))).join('')||'<span class="muted">终点：交给 User</span>'}
+  ${C.some(a=>optFor(a,f))?'<p class="muted">虚线 pill = 可选输入</p>':''}
+  ${['artifact','memory'].includes(k)?'<p class="muted">作为输入时，用户给出任意位置、任意格式的等价材料即可。</p>':''}`}
+function selectAgent(id){clear();document.body.classList.add('focus');const a=AG[id];
+  const ups=new Set(a.in.flatMap(r=>prods(r.f))),downs=new Set(a.out.flatMap(r=>cons(r.f)));ups.delete(a);downs.delete(a);
+  A.forEach(x=>{const u=ups.has(x),d=downs.has(x);if(u&&d)mark(x,'up','上游 + 下游');else if(u)mark(x,'up','上游');else if(d)mark(x,'down','下游')});
+  mark(a,'self','当前');
+  const fs=[...a.in,...a.out].map(r=>r.f).concat(a.ref);$$('.chip').forEach(c=>fs.some(f=>rel(f)(c.dataset.f))&&c.classList.add('hit'));
+  $$('.edge').forEach(g=>EDGES[g.dataset.i].items.some(t=>t.p===a||t.c===a)&&g.classList.add('hit'));
+  const src=f=>{const k=kind(f);if(k==='user')return'<span class="muted">← 用户提供</span>';if(k==='ext')return'<span class="muted">← OpenAlex 检索</span>';if(k==='orphan')return'<span class="warn">← 无来源</span>';
+    const p=prods(f).filter(x=>x!==a);return p.length?'<span class="arrow">←</span> '+p.map(x=>pill(x)).join(''):'<span class="muted">← 自身</span>'};
+  const dst=r=>{const c=cons(r.f).filter(x=>x!==a);return `<span class="mode">${MODE[r.mode]}</span><div>`+(c.length?'<span class="arrow">→</span> '+c.map(x=>pill(x,optFor(x,r.f))).join(''):'<span class="muted">→ User</span>')+'</div>'};
+  insp.innerHTML=`<div class="ik">AGENT · ${a.st.key}</div><h3 class="mono">${esc(a.name)}${a.tag?` · ${esc(a.tag)}`:''}</h3><p>${esc(a.role)}</p>
+  <h5>读入（${a.in.length}）</h5>${a.in.map(r=>`<div class="iorow">${chip(r)}<div>${src(r.f)}</div></div>`).join('')}
+  <h5>产出（${a.out.length}）</h5>${a.out.map(r=>`<div class="iorow">${chip(r,1)}${dst(r)}</div>`).join('')}
+  ${a.ref.length?`<h5>查阅 references（${a.ref.length}）</h5>${a.ref.map(f=>`<div class="iorow">${chip(f)}${F[f]?.note?`<span class="mode">${esc(F[f].note)}</span>`:''}</div>`).join('')}`:''}
+  <h5>★ 停下</h5><p>${esc(a.stop||'无')}</p>
+  ${a.rules.length?`<h5>Templates / shared</h5><ul>${a.rules.map(x=>`<li><code>${esc(x)}</code></li>`).join('')}</ul>`:''}`}
+function selectEdge(i){clear();document.body.classList.add('focus');const e=EDGES[i];
+  $$('.edge')[i].classList.add('hit');
+  const by=new Map();e.items.forEach(t=>{if(!by.has(t.f))by.set(t.f,[]);by.get(t.f).push(t)});
+  by.forEach((_,f)=>$$('.chip').forEach(c=>rel(f)(c.dataset.f)&&c.classList.add('hit')));
+  e.items.forEach(t=>{mark(t.p,'up','写 producer');mark(t.c,'down','读 consumer')});
+  e.items.forEach(t=>{if(e.items.some(u=>u.c===t.p))mark(t.p,'up','读 + 写')});
+  const fs=stage(e.from),ts=stage(e.to);
+  insp.innerHTML=`<div class="ik">HANDOFF · ${e.from} → ${e.to}${+e.to<+e.from?' · 回流':''}${e.allOpt?' · 仅可选':''}</div><h3>${fs.name} → ${ts.name}</h3><p>${by.size} 个文件跨 stage 交接；默认在对话中传递，用户保存后也可跨 session 读取。</p>
+  ${[...by].map(([f,ts])=>`<div class="iorow">${chip(f)}<div>${[...new Set(ts.map(t=>t.p))].map(x=>pill(x)).join('')} <span class="arrow">→</span> ${[...new Set(ts.map(t=>t.c))].map(x=>pill(x,optFor(x,f))).join('')}</div></div>`).join('')}`}
+function inspHome(){insp.innerHTML=`<div class="ik">Inspector</div><h3>怎么读这张图</h3><ul>
+  <li>点 <b>file chip</b>：高亮写它和读它的 agent，并说明写入方式</li>
+  <li>点 <b>agent 卡片</b>：高亮上游 / 下游 agent，逐个文件列出来源、去向和查阅的 references</li>
+  <li>点 <b>Stage map 弧线</b>：列出该跨 stage 交接的全部文件与 agent 对</li>
+  <li>点 <b>stage 圆点</b>：跳到该 stage 的 agent 泳道</li><li><kbd>Esc</kbd> 或点空白处清除</li></ul>
+  <h5>Legend</h5><div class="lg">${LG.map(([c,t])=>`${c}<span>${t}</span>`).join('')}</div>
+  <h5>I/O 规则（根 SKILL.md ## 6）</h5><ul><li>输入：任意位置、任意格式，缺材料先问</li><li>输出：默认在对话中给出，要求时才保存</li><li>例外：表格、manuscript 正文确认文件清单后写入；AEF02 / AEF03 只做 design</li><li>数字：不编造；不确定留 <code>[[NUM]]</code>，确定的注明来源</li></ul>`}
+document.addEventListener('click',e=>{const t=e.target;let x;
+  if(x=t.closest('.chip'))return selectFile(x.dataset.f);
+  if(x=t.closest('.pill')){selectAgent(x.dataset.a);$('#ag-'+x.dataset.a).scrollIntoView({behavior:'smooth',block:'center'});return}
+  if(x=t.closest('.edge'))return selectEdge(+x.dataset.i);
+  if(x=t.closest('.node'))return $('#lane-'+x.dataset.s).scrollIntoView({behavior:'smooth',block:'start'});
+  if(x=t.closest('.card'))return selectAgent(x.dataset.card);
+  if(x=t.closest('tr.row'))return selectFile(x.dataset.f);
+  if(!t.closest('aside'))clear()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')clear()});
+inspHome();
+</script>
+</body>
+</html>
