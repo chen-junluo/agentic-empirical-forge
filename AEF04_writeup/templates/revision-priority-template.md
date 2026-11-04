@@ -3,14 +3,14 @@
 ## Revision Priority List
 
 **论文：** [论文标题]
-**基于：** Internal Review Report [日期]
+**基于：** [用户指定的 2–3 份审查报告及日期]
 
 ---
 
 ### Priority 1: Must Fix（投稿前必须解决）
 
 - [ ] **Issue:** [描述]
-  - Source: [来自哪个审查维度/Issue 编号]
+  - Source: [来自哪份报告 / Issue 编号]
   - Suggested Fix: [具体修改方案]
   - Affected Sections: [涉及章节]
   - Estimated Effort: [低/中/高]
