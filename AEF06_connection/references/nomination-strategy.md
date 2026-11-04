@@ -1,6 +1,6 @@
 # Reviewer/Editor Nomination 策略指南
 
-> 适用于：AEF06_connection 的 Connection Scout Agent
+> 适用于：AEF06_connection 的 `reviewer-profiler`
 
 ---
 

@@ -1,6 +1,6 @@
 # 学术人脉维护文件模板
 
-> 用户维护此文件，记录学术人脉网络。Connection Scout 读取此文件匹配 potential reviewer/editor。
+> 用户维护此文件，记录学术人脉网络。`reviewer-profiler` 读取此文件匹配 potential reviewer/editor。
 
 ---
 
