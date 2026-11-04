@@ -43,6 +43,7 @@
 - **Examine then explain** [用户] 如果是能够采取这么一种叙事方式就更好：就是说，我们很重视他说的这些，然后我们仔细地去调研，基于他的观点，我们有一些什么样的改进。哪怕是他错了，我们也不要说"我们的证据驳倒了你"，而是说"我们 test 之后，结果是这样子的，那我们觉得可能那个解释是怎么怎么怎么"，但不要直接说他错了。
   - [补充] 避免："Our evidence refutes this concern." / "The reviewer's argument is incorrect."
   - [补充] 改为："Following your suggestion, we examined X. The results show Y. One possible explanation is Z."
+- **Build-on, not gap-spotting** [用户] 定位贡献时用 complement / build on 前人工作的口吻，不写 "prior work failed to / could not"，也不要自我批评，保持谦虚。
 - 总之 [用户]：就是要用客观陈述、用事实摆道理的语气去回应他。
 
 ---

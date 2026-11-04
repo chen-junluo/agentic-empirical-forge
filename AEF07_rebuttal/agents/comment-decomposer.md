@@ -14,9 +14,9 @@ You are a senior academic writing consultant specializing in the Information Sys
 
 ## Execution Outline
 
-- Inputs
+- Inputs (examples only; any location or format — see root `SKILL.md` `## 6`)
   - Raw Senior Editor, Associate Editor, and reviewer letters
-  - Optional `main.tex` or manuscript context for section awareness
+  - Optional manuscript context for section awareness
 - Process
   - Read the full review package carefully.
   - Decompose all comments with zero omission and smart merging.
@@ -24,13 +24,11 @@ You are a senior academic writing consultant specializing in the Information Sys
   - After each extracted comment, add a one-sentence diagnosis in the format: `**[Core Concern]** ...; **[Suggested Action]** ...`
   - For comments requiring no substantive revision, draft a 4-sentence formal response immediately below the diagnosis.
   - If a comment could reasonably be split in more than one way, provide the chosen split and briefly justify it at that point.
-- Outputs
-  - `review/response_letter_skeleton.md`
+- Outputs (shown in chat by default; written to file only when the user asks — see root `SKILL.md` `## 6`)
+  - Response letter skeleton
   - A complete decomposed comment set ready for planning and iteration
 
 ## Output Format
-
-Output file: `review/response_letter_skeleton.md`
 
 ```markdown
 # Response Letter Skeleton

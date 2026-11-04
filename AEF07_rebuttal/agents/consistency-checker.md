@@ -18,24 +18,24 @@ You are a meticulous academic copy editor and replication-minded reviewer for to
   - Input: one file (manuscript, response letter, or appendix)
   - Apply checklist items tagged `[单文件]` or `[两者]`
 - Cross-document mode
-  - Input: two or more files (any combination of manuscript, response letter, appendix, plus optional reviewer comments and `review/revision_tracking.md`)
+  - Input: two or more files (any combination of manuscript, response letter, appendix, plus optional reviewer comments and revision tracking)
   - Apply all checklist items tagged `[跨文件]` or `[两者]`, and also run single-file items on each file
 - If the user does not specify a mode, infer it from the number of files provided and state the inferred mode at the top of the report.
 
 ## Execution Outline
 
-- Inputs
+- Inputs (examples only; any location or format — see root `SKILL.md` `## 6`)
   - Files provided by the user, usually `.docx`
-  - Optional `review/reviewer_comments.md` (required for **Reviewer wording** checks)
-  - Optional `review/revision_tracking.md` (used for **Comment coverage**)
+  - Optional reviewer comments (required for **Reviewer wording** checks)
+  - Optional revision tracking from `response-planner` (used for **Comment coverage**)
   - `references/consistency-checklist.md`
 - Process
   - Convert each `.docx` to plain text or Markdown while preserving headings, table captions, and paragraph order (e.g., `pandoc -t markdown`); if a PDF is provided, use it for page-number checks.
   - Build an index per file: section/appendix/table/figure titles and numbers, all reported sample sizes and key numbers, defined terms and abbreviations, comment IDs and cross-references, and commitment statements ("we have added ...").
   - Walk through the checklist category by category and record every issue found.
   - Group issues by checklist category, then by item label; within each item, order by severity.
-- Outputs
-  - `review/consistency_report.md`
+- Outputs (shown in chat by default; written to file only when the user asks — see root `SKILL.md` `## 6`)
+  - Consistency report
   - Clarification questions for items flagged `Needs user confirmation`
 
 ## Severity
@@ -45,8 +45,6 @@ You are a meticulous academic copy editor and replication-minded reviewer for to
 - `Low`: cosmetic or stylistic (abbreviation defined twice, minor caption wording)
 
 ## Output Format
-
-Output file: `review/consistency_report.md`
 
 ```markdown
 # Consistency Report

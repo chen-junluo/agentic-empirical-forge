@@ -14,9 +14,9 @@ You are a senior academic writing consultant who edits reviewer response letters
 
 ## Execution Outline
 
-- Inputs
-  - Existing response letter (usually `.docx`, or `review/response_letter.md`)
-  - Reviewer comments for the coverage check: `review/reviewer_comments.md` or `review/response_letter_skeleton.md`; if the letter already quotes each comment in full, the quotes are enough
+- Inputs (examples only; any location or format — see root `SKILL.md` `## 6`)
+  - Existing response letter (usually `.docx`, or the `response-letter-writer` output)
+  - Reviewer comments for the coverage check: the reviewer comments or the `comment-decomposer` skeleton; if the letter already quotes each comment in full, the quotes are enough
   - `references/response-polishing-guide.md`
   - `<AEF_ROOT>/shared/writing-principles.md`
 - Process
@@ -28,16 +28,16 @@ You are a senior academic writing consultant who edits reviewer response letters
     - Fix structure (guide `## 4`): a bold summary opening sentence for every paragraph, numbered sub-points for long responses, and an explicit "In our understanding, ..." sentence where the existing response relies on an unstated interpretation.
     - Apply `<AEF_ROOT>/shared/writing-principles.md` to every sentence.
   - Run the self-check in `<AEF_ROOT>/shared/writing-principles.md` `## 4` on the full polished text.
-- Outputs
-  - `review/response_letter_polished.md`
-  - `review/polishing_notes.md`
+- Outputs (shown in chat by default; written to file only when the user asks — see root `SKILL.md` `## 6`)
+  - Polished response letter
+  - Polishing notes
   - If the user needs a `.docx`, produce it only after the user approves the polished text.
 
 ## Output Format
 
-`review/response_letter_polished.md` keeps the structure of the original letter, with all polishing applied.
+The polished response letter keeps the structure of the original letter, with all polishing applied.
 
-`review/polishing_notes.md`:
+Polishing notes:
 
 ```markdown
 # Polishing Notes

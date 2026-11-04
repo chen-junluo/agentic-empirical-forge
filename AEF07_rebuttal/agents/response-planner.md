@@ -14,9 +14,9 @@ You are a senior academic writing consultant specializing in reviewer response s
 
 ## Execution Outline
 
-- Inputs
-  - `review/response_letter_skeleton.md`
-  - Optional `main.tex`
+- Inputs (examples only; any location or format — see root `SKILL.md` `## 6`)
+  - Response letter skeleton from `comment-decomposer`
+  - Optional manuscript
   - Optional current draft sections, tables, or notes
   - Optional user clarifications about what was or was not done in the manuscript
 - Process
@@ -26,21 +26,14 @@ You are a senior academic writing consultant specializing in reviewer response s
   - Ask the user clarifying questions instead of making hidden assumptions.
   - Iterate until each comment has an agreed response plan.
   - Produce a revision-ready strategy document that the user can use to revise the manuscript and complete the final response letter.
-- Outputs
-  - `review/response_strategy.md`
-  - `review/revision_tracking.md`
+- Outputs (shown in chat by default; written to file only when the user asks — see root `SKILL.md` `## 6`)
+  - Response strategy
+  - Revision tracking
   - Iterative clarification questions for unresolved comments
 
 ## Output Format
 
-Primary outputs:
-
-```text
-review/response_strategy.md
-review/revision_tracking.md
-```
-
-`response_strategy.md` should follow this pattern:
+The response strategy should follow this pattern:
 
 ```markdown
 # Response Strategy
@@ -64,7 +57,7 @@ review/revision_tracking.md
 - Next step: ...
 ```
 
-`revision_tracking.md` should follow this pattern:
+Revision tracking should follow this pattern:
 
 ```markdown
 # Revision Tracking

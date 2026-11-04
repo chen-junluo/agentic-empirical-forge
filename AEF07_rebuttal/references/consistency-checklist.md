@@ -50,6 +50,9 @@
 
 - **Promised changes** [用户] [两者] 比如 response letter 或 manuscript 里明明说了做了某些修改或补充，但后面实际没有做、没有披露对应细节，或者根本没写，这种情况也是不行的。（重点是跨文件）
   - 检查要点：逐条核对 response letter 中 "we have added / revised / conducted ..." 等承诺，在 manuscript / appendix 中找到对应内容；manuscript 中 "see Appendix X for details" 指向的位置确有相应细节
-- **Comment coverage** [补充] [跨文件] Comment 覆盖完整：每条 reviewer comment 在 response letter 中都有回应；`revision_tracking.md` 中标为 `DONE` 的项在 manuscript 中可找到对应修改
+- **Comment coverage** [补充] [跨文件] Comment 覆盖完整：每条 reviewer comment 在 response letter 中都有回应；revision tracking 中标为 `DONE` 的项在 manuscript 中可找到对应修改
 - **Consistent stance** [补充] [单文件] 回应立场一致：对同一问题，回应不同 reviewer 或同一 reviewer 的不同 comment 时，立场与理由不相互矛盾（如对 R1 说"不做"、对 R2 说"已做"）（response letter）
 - **Stale wording** [补充] [单文件] 修订后无残留旧表述：新增分析或新 framing 之后，abstract、introduction、conclusion 等未同步更新的段落不再与新内容冲突（manuscript）
+- **Unbacked claims** [用户] [单文件] letter 里声称做过、但没给出证据的分析，比如 "results unchanged when…"、inter-coder agreement，直接删掉。
+  - [补充] `consistency-checker` 只报告不改文件：列出该句及缺失的证据（table / appendix / 数字），suggested fix 写"删除"，由用户决定
+- 描述的points的数目要一致，比如不能出现写 "differ … in two aspects"，后面却列了 First、Second、Third 三点。
