@@ -16,3 +16,8 @@
 *.parquet
 *.xlsx
 projects/
+
+# Agents Files
+.claude/
+.codex/
+TODO.md
