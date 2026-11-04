@@ -1,157 +1,45 @@
 ---
 name: AEF03_extend
-description: "在 preliminary results 基础上进入 extend 阶段，系统扩展分析（稳健性、异质性、机制、识别策略强化），筛选 work 的结果，组合成 `writeup/storytelling.md` 传给 AEF04_writeup。"
+description: "扩展分析设计工具箱：只做 design，不写代码。基于用户确认的 credible baseline，依据 references/ 下的 mechanisms、policy learning、identification checklist 设计 mechanism、heterogeneity 与其他 insightful 的分析；对用户提供的结果按 WORK / NOT WORK / MARGINAL 筛选，把保留结果组织成 storytelling 叙事蓝图。按任务拆为三个条目，均可单独调用。"
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-04-17"
+  version: "1.1.0"
+  last_updated: "2026-11-02"
   stage: "03"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"
 ---
 
-# Stage 03: extend — 扩展分析、结果筛选与 Storytelling
+# AEF03_extend：扩展分析设计、结果筛选与 Storytelling
 
-实证研究中，大量分析不显著是常态。本阶段的核心逻辑是：先扩展，再筛选，再组织叙事。
-
-## Objectives
-
-- 批量尝试尽可能多的分析组合（稳健性、异质性、机制、识别策略强化）
-- 从所有扩展结果中筛选值得保留的分析（显著、方向合理、效应量有经济意义）
-- 将筛选结果组合成 `writeup/storytelling.md`，作为 AEF04_writeup 的叙事蓝图
-
-## Human-in-the-Loop Checkpoints
-
-| Checkpoint | Timing | User Action |
-|------------|--------|-------------|
-| 分析菜单确认 | 扩展前 | Agent 提出分析菜单，用户选择优先级和范围 |
-| 结果筛选确认 | 筛选后 | Agent 呈现 WORK / NOT WORK 结果摘要，用户确认哪些进入 storytelling |
-| 叙事审阅 | 叙事后 | 用户审阅 `writeup/storytelling.md`，确认叙事逻辑后才进入 AEF04_writeup |
-
-## Orchestration Workflow
-
-```text
-Stage 02 preliminary results
-        │
-        ▼
-Phase 1: Extend
-- robustness
-- heterogeneity
-- mechanism
-- identification strengthening
-        │
-        ▼
-★ User confirms analysis menu
-        │
-        ▼
-Phase 2: Triage
-- tag WORK / NOT WORK / MARGINAL
-- keep full trace in `results_log.md`
-        │
-        ▼
-★ User confirms result selection
-        │
-        ▼
-Phase 3: Storytelling
-- organize surviving findings
-- produce `writeup/storytelling.md`
-        │
-        ▼
-★ User reviews narrative logic
-        │
-        ▼
-Stage 04: writeup
-```
-
-## Three-Phase Flow
-
-### Phase 1: Extend
-
-批量尝试尽可能多的分析组合：
-
-| Category | Examples |
-|----------|----------|
-| 稳健性检验 | 替换 DV/IV 定义、样本窗口、控制变量、聚类 SE、安慰剂 |
-| 异质性分析 | 分组、交互项 |
-| 机制检验 | 中介、渠道 |
-| 识别策略强化 | IV、DID、RDD |
-
-每个分析跑完后立即记录到 `results_log.md`，标注显著性、系数方向、效应量、是否符合理论预期。
-
-### Phase 2: Triage
-
-从所有扩展结果中挑选 work 的分析。筛选标准：
-
-1. 统计显著（p < 0.05 或 0.10，视领域惯例）
-2. 系数方向与理论预期一致
-3. 效应量有经济意义
-4. 多个稳健性检验中结果稳定
-
-不 work 的分析不丢弃，保留在 `results_log.md` 中备查，但不进入 storytelling。
-
-### Phase 3: Storytelling
-
-将筛选出的结果组合成一份 `writeup/storytelling.md`。这不是论文，而是传给 AEF04_writeup 的叙事蓝图：
-
-- 主线故事：主回归说明了什么
-- 稳健性：哪些检验支撑了主结果的可信度
-- 机制：通过什么渠道起作用
-- 异质性：在哪些群体或情境下效应更强或更弱
-- 叙事逻辑：这些结果如何串成一个有说服力的 contribution story
+- 用法：按用户意图从 agent menu 选一个条目，Read `agents/extension-designer.md` 执行；不需要从第一个条目开始
+- 典型顺序：`extension-designer`（扩展设计）→ 用户自行跑分析 → `extension-designer`（结果筛选）→ `extension-designer`（storytelling）→ `AEF04_writeup`
+- Input / Output：menu 里的 input 只是来源示例；输入格式不限，输出默认在对话中给出，用户要求时才保存，保存位置由用户指定（见根 `SKILL.md` `## 6`）
+- 本 stage 只做 design，不写代码、不跑代码
 
 ---
+## 1. Agent menu
 
-## Agent Team (1 Agent)
+- `extension-designer`（扩展设计）：基于用户确认的 credible baseline，设计 mechanism、heterogeneity 与其他 insightful 的分析（识别策略强化、policy learning、针对具体 threat 的稳健性），逐项说明要回答的问题、specification、预期结果与 null 结果的含义
+  - 何时用：baseline 已被用户确认，需要设计机制 / 异质性 / 稳健性 / IV、DID、RDD 等扩展
+  - Input：用户确认的 baseline（`credible-baseline-identifier` 的 design 或口头描述）、用户已跑出的 baseline 结果（results log、表格或总结）
+  - Output：extension design
+  - Rules：`references/identification-checklist.md`、`references/mechanisms.md`、`references/policy-learning.md`
+  - ★ 停下：用户在设计中选择范围与优先级
+- `extension-designer`（结果筛选）：对用户提供的每个扩展结果打 WORK / NOT WORK / MARGINAL 标签
+  - 何时用：用户已跑完扩展分析，需要决定哪些结果进入叙事
+  - Input：用户提供的结果（results log、表格或总结，任意格式）
+  - Output：带标签的 results log、WORK / NOT WORK 摘要
+  - Rules：`agents/extension-designer.md` 的 `## Triage Criteria`
+  - ★ 停下：用户确认哪些结果进入 storytelling
+- `extension-designer`（storytelling）：把保留结果串成主线、稳健性、机制、异质性、contribution story，每个数字附用户报告的脚本与表格路径
+  - 何时用：结果筛选已确认，准备交给 `AEF04_writeup`
+  - Input：已确认筛选的 results log、表格与图
+  - Output：storytelling blueprint
+  - Rules：`templates/storytelling-template.md`
+  - ★ 停下：用户审阅叙事逻辑
 
-| # | Agent | Role | Definition |
-|---|-------|------|------------|
-| 1 | `data-analyst` | 计量经济学分析师：批量执行扩展分析、筛选结果、产出 storytelling 文档 | `agents/data-analyst.md` |
+---
+## 2. Files
 
-## References
-
-| Reference | Purpose | Used By |
-|-----------|---------|---------|
-| `references/identification-checklist.md` | 因果识别策略清单（DID、IV、RDD、FE 及其诊断要求） | data-analyst |
-| `<AEF_ROOT>/shared/r-conventions.md` | R 脚本规范（全局共用） | data-analyst |
-| `<AEF_ROOT>/shared/analysis-dimensions.md` | 分析维度与调参规范（全局共用） | data-analyst |
-
-## Templates
-
-| Template | Purpose |
-|----------|---------|
-| `templates/analysis-menu.md` | extend 阶段分析选项菜单模板 |
-| `templates/storytelling-template.md` | Storytelling 文档模板（传给 AEF04_writeup 的叙事蓝图） |
-
-## Input
-
-- `projects/<slug>/analysis/scripts/03_main.R`（已有主回归）
-- `projects/<slug>/analysis/analysis_plan.md`
-- `projects/<slug>/analysis/results_log.md`（02 阶段的 preliminary results）
-
-## Output
-
-- `projects/<slug>/analysis/scripts/04_robustness.R`
-- `projects/<slug>/analysis/scripts/05_heterogeneity.R`
-- `projects/<slug>/analysis/scripts/06_mechanism.R`
-- 对应 `.tex` 表格和 `.pdf` 图表
-- `projects/<slug>/analysis/results_log.md`（更新，含所有扩展结果）
-- `projects/<slug>/writeup/storytelling.md`（核心输出：叙事蓝图，传给 AEF04_writeup）
-
-## Directory Structure
-
-```text
-AEF03_extend/
-├── SKILL.md
-├── agents/
-│   └── data-analyst.md
-├── references/
-│   ├── identification-checklist.md
-│   ├── r-conventions.md
-│   └── analysis-dimensions.md
-└── templates/
-```
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-04-19 | First public v1.0.0 release |
+- `references/` 是用户维护的规则文件，新增规则直接改对应文件（见根 `SKILL.md` `## 5. Rule capture`）
+- 本 stage 全部文件：`references/identification-checklist.md`、`references/mechanisms.md`、`references/policy-learning.md`、`templates/storytelling-template.md`

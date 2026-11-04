@@ -1,6 +1,6 @@
 # 因果识别策略清单
 
-> 适用于：Agent 3 (Data Analyst) — Stage AEF03_extend
+> 适用于：`extension-designer` — Stage AEF03_extend
 
 ---
 
