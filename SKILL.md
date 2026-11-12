@@ -50,7 +50,7 @@ metadata:
 ## 4. 加载方式
 
 - 用 Read 读取 `<AEF_ROOT>/<AEFxx_name>/SKILL.md`，按 agent menu 选择 agent，再 Read 该 `agents/<name>.md` 执行；该文件中的相对路径（`agents/`、`references/`、`templates/`）都相对于 `<AEF_ROOT>/<AEFxx_name>/` 解析
-- 全局规范统一从 `<AEF_ROOT>/shared/` 读取，包括 `citation-rules.md`（检查 reference）、`openalex-protocol.md`（稳定访问 OpenAlex）、`writing-principles.md`（所有产出英文文本的 agent 都要遵守）；sub-skill 里写的 `../../shared/` 一律按此处理
+- 全局规范统一从 `<AEF_ROOT>/shared/` 读取，包括 `citation-rules.md`（检查 reference）、`openalex-protocol.md`（稳定访问 OpenAlex）、`writing-principles.md`（所有产出英文文本的 agent 都要遵守）、`table-conventions.md`（所有 table 的呈现）；sub-skill 里写的 `../../shared/` 一律按此处理
 - 开始执行前先用一行告诉用户：`→ 加载 AEFxx_name（原因：显式点名 / 意图匹配 / 状态推断）`
 - 一个 agent 完成并通过 ★ 点后，可按典型顺序提示下一步，不自动执行
 
@@ -63,7 +63,9 @@ metadata:
 - 落点：每条规则指定一个目标文件和其中的 `##` 类别
   - response letter 的称呼、立场、语气、结构 → `AEF07_rebuttal/references/response-polishing-guide.md`
   - manuscript、response letter、appendix 的一致性检查项 → `AEF07_rebuttal/references/consistency-checklist.md`
-  - 所有英文写作通用规则 → `shared/writing-principles.md`
+  - 所有英文写作通用规则（含结果与数字表述）→ `shared/writing-principles.md`
+  - table 呈现（label、header、notes，manuscript 与 response 通用）→ `shared/table-conventions.md`
+  - 回应策略（close the case、minor comment 定性、新内容在 manuscript 中的位置）→ `AEF07_rebuttal/references/response-strategy.md`
   - agent 执行方式（何时停下来问、输出格式、流程步骤）→ 对应的 `<AEFxx_name>/agents/<agent>.md`
   - 其他 stage 的规则 → 该 stage `references/` 下最相关的文件，没有合适文件时标注"建议新建"
 - 格式：每条 1–3 行，按目标文件现有格式写好，用户改完可直接粘贴

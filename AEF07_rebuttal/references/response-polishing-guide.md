@@ -1,6 +1,6 @@
 # Response Letter 润色规范（Response Polishing Guide）
 
-> 适用于：AEF07_rebuttal 的 `response-polisher` agent。本文件定义 response letter 的称呼、立场、语气与结构要求；通用写作规则见 `shared/writing-principles.md`，两者同时适用。
+> 适用于：AEF07_rebuttal 的 `response-polisher` agent。本文件定义 response letter 的称呼、立场、语气与结构要求；通用写作规则见 `shared/writing-principles.md`，table 的 label 与 notes 见 `shared/table-conventions.md`，全部同时适用。
 
 - 维护规则
   - 新增要求：在对应类别下加一个 bullet，开头写一个本文件内不重复的英文短标签（如 **Directly address**），agent 与 polishing notes 按标签引用；条目顺序没有意义，不需要编号；新类别直接新增 `## N. ...`
@@ -44,6 +44,7 @@
   - [补充] 避免："Our evidence refutes this concern." / "The reviewer's argument is incorrect."
   - [补充] 改为："Following your suggestion, we examined X. The results show Y. One possible explanation is Z."
 - **Build-on, not gap-spotting** [用户] 定位贡献时用 complement / build on 前人工作的口吻，不写 "prior work failed to / could not"，也不要自我批评，保持谦虚。
+- **Not lecturing** [用户] 对于常见的方法（比如两个regression里面系数的比较）不要讲太多检验或方法的技术细节，否则 reviewer 会觉得我们在教育他；比较系数时直接说差距和结果（见 `shared/writing-principles.md` **Result not procedure**）。
 - 总之 [用户]：就是要用客观陈述、用事实摆道理的语气去回应他。
 
 ---
@@ -57,3 +58,6 @@
 - **State our understanding** [用户] 对于一些我们觉得他没有解释清楚的地方，要先说"在我们的理解下，你说的'xxx'意味着 xxx。我们基于这个理解来..."
   - [补充] 英文句式："In our understanding, by 'xxx' you mean xxx. Based on this understanding, we ..."
   - [补充] 只有在现有回复已经按某种理解作答、但没有把这个理解说出来时才补这句；如果这个理解本身是否成立都拿不准，先问用户
+- **Uniform sub-headings** [用户] 整个 response letter 中同一层级的小标题、小 section 标记格式要统一：不要有的用 (a)(b)(c)、有的用 1. 2. 3.、有的用斜体一句话、有的把加粗句子放在段首。各条回复分别迭代时最容易不一致，成稿前要统一。
+  - [补充] 选定一种层级方案（如 comment 内一级小节统一用 `**1. ...**`，段内 lead-in 统一加粗），全 letter 适用，并在 polishing notes 中说明选定的方案
+- **English-only examples** [用户] 用原始语料（非英文）举例时只给英文翻译，不附原文，除非 reviewer 要求看原文

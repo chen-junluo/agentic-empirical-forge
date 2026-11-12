@@ -20,6 +20,7 @@
 - **Key estimates** [补充] [两者] 关键估计结果的引用一致：正文、abstract、response letter 中引用的 coefficient、standard error、显著性水平、effect size（如 "increases by 12%"）与对应 table 中的数字一致
 - **Descriptive numbers** [补充] [两者] 描述性数字一致：样本期间（年份范围）、观测单位、公司 / 用户 / 地区数量、mean、percentage 等在不同位置一致
 - **Model specification** [补充] [两者] 模型设定描述一致：estimator、fixed effects、clustering level、control variables 在正文方法描述、table notes、appendix 中一致
+- **Significance wording** [补充] [两者] 文字中的显著性表述与 table 星号、note 阈值一致；不用 "0.1% level" 这类有歧义的写法（见 `shared/writing-principles.md` **Explicit p**）
 - **Result direction** [补充] [两者] 结果解读方向一致：同一结果的符号（正 / 负）、显著与否、经济含义在 abstract、introduction、results、conclusion、response letter 中表述不矛盾
 
 ---
@@ -39,6 +40,7 @@
 - **Comment cross-refs** [用户] [单文件] 单个文件内（如 response letter）的交叉引用。最常见的是在某个 reviewer 的 comments（如 R1-2）里提到"参见 R1-4"，那就要核实 R1-4 里是不是真的有 R1-2 所指的内容。（跨 reviewer 引用如 "see our response to R2-3" 同样适用）
 - **Location info** [用户] [两者] 仔细检查 section title、appendix title、table title 以及 page 等信息。
   - 检查要点：response letter 中写的 "Section 4.2, p. 15"、"Table A3" 等定位信息，与 manuscript / appendix 实际的标题、编号、页码一致，且被引用对象确实存在
+- **Sub-heading style** [用户] [单文件] response letter 中同一层级的小标题 / 小 section 标记格式统一，不混用 (a)(b)、1. 2.、斜体句、加粗句（见 `references/response-polishing-guide.md` **Uniform sub-headings**）
 - **Appendix order** [用户] [跨文件] 正文里 appendix 的顺序要顺下来：正文中第一个出现的必须是 Appendix A，第二个是 Appendix B，需要把 appendix 内部的顺序对应修改过来。（manuscript ↔ appendix）
 - **Table/figure numbering** [补充] [两者] Table、figure 按正文首次引用顺序连续编号：无跳号、无重复、无"引用了却不存在"的 table / figure
 - **Citation list** [补充] [单文件] 文中 citation 与 reference list 一一对应：引用了的都在 reference list，reference list 中的都被引用；作者名、年份拼写一致
@@ -55,4 +57,18 @@
 - **Stale wording** [补充] [单文件] 修订后无残留旧表述：新增分析或新 framing 之后，abstract、introduction、conclusion 等未同步更新的段落不再与新内容冲突（manuscript）
 - **Unbacked claims** [用户] [单文件] letter 里声称做过、但没给出证据的分析，比如 "results unchanged when…"、inter-coder agreement，直接删掉。
   - [补充] `consistency-checker` 只报告不改文件：列出该句及缺失的证据（table / appendix / 数字），suggested fix 写"删除"，由用户决定
+- **Category anatomy** [用户] [两者] 分类分析写清类别是否互斥、是否穷尽（有无 "Other"）、reference group 是什么；各类别观测数加总与总数对得上（见 `shared/writing-principles.md` **Category anatomy**）
+- **Ripple check** [用户] [跨文件] 一处分析、定义或分类改动后（如某类内容重新归类、某张 table 删列），所有引用它的位置都要同步更新：其他 comment 的回复、editor 部分的 integrated points、manuscript、appendix、table 与 note。不能孤立地改一处。
 - 描述的points的数目要一致，比如不能出现写 "differ … in two aspects"，后面却列了 First、Second、Third 三点。
+
+---
+
+## 5. Table 呈现
+
+- **Table conventions** [用户] [两者] 按 `shared/table-conventions.md` 逐条检查每张 table：第二阶段不写 fitted label、每张 table 有 significance note、有 dummy 时写明 reference group、跨列变化放在 header、label 清晰但不过度具体
+
+---
+
+## 6. Close-the-case 审查
+
+- **Follow-up triggers** [用户] [单文件] response letter 中可能引发 reviewer 追问、把论文带离主线的地方：与主 story 或 mechanism 不一致的怪 pattern、过多检验技术细节、过于具体而会提醒已知 concern 的描述、超出证据的解读。这类不算错误，一律标 `Needs user confirmation`（策略见 `references/response-strategy.md` `## 战略目标：Close the case`）

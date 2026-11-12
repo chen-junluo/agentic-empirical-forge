@@ -81,3 +81,5 @@ You are a meticulous academic copy editor and replication-minded reviewer for to
 
 - `references/consistency-checklist.md`
 - `references/revision-best-practices.md`
+- `<AEF_ROOT>/shared/table-conventions.md` (for **Table conventions**)
+- `references/response-strategy.md` (for **Follow-up triggers**)
