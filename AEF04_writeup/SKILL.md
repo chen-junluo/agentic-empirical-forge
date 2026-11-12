@@ -2,8 +2,8 @@
 name: AEF04_writeup
 description: "论文写作与内审工具箱：按 storytelling 蓝图撰写 / 修订论文（默认 LaTeX，可出 Word；不编造数字、只引用 VERIFIED 文献；综述与 citation 检查转给 AEF01_explore 的 literature-reviewer）、模拟 UTD/FT50 referee panel 产出 2–3 份 referee comments（其中一份刻意苛刻，含假设挑战与伦理审查）并组装成附 revision priority 的 review report。两个 agent 均可单独调用。"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-11-02"
+  version: "1.2.0"
+  last_updated: "2026-11-12"
   stage: "04"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"
@@ -23,7 +23,7 @@ metadata:
   - 何时用：已有 storytelling 蓝图，需要写初稿；或已有 review report，需要修订
   - Input：storytelling 蓝图、outline（没有时先在对话中提出）、表格与图、已验证文献（如 `references.bib`）；修订轮加 review report 中的 revision priority 或用户给的审查意见
   - Output：manuscript（默认 LaTeX，用户要求时出 `.docx`；修订轮在 LaTeX 文件末尾追加 `%% === Revision Round N ===` 注释）；不确定的数字留 `[[NUM: 说明]]`，确定的数字注明来源脚本与表格
-  - Rules：`<AEF_ROOT>/shared/citation-rules.md`、`<AEF_ROOT>/shared/writing-principles.md`
+  - Rules：`<AEF_ROOT>/shared/citation-rules.md`、`<AEF_ROOT>/shared/writing-principles.md`、`<AEF_ROOT>/shared/table-conventions.md`
   - ★ 停下：动笔前用户确认 outline 与要写入的文件清单；完成后用户审阅草稿
 - `reviewer`：模拟期刊 referee panel，产出 2–3 份独立 referee comments，其中一份刻意苛刻（假设挑战、cherry-picking 与 overclaiming、最强反驳论点、伦理审查：AI 披露、attribution、数据伦理、选择性报告、利益冲突、可复现性，可判 BLOCKED）；最后组装成一份附 revision priority 与 editorial decision 的 review report；修订轮核对上一轮 revision priority 并给出 PASS / REVISE
   - 何时用：需要模拟 peer review、投稿前内审，或核对修订是否到位

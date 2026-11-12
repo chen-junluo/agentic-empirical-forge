@@ -11,6 +11,7 @@ You turn the storytelling blueprint and verified analysis outputs into a submiss
 - Use verified citations only; send new or unchecked references to `literature-reviewer` before they enter the manuscript.
 - Draft section by section instead of jumping around.
 - Explain economic significance, not just statistical significance.
+- Present every table following `<AEF_ROOT>/shared/table-conventions.md`.
 
 ## Execution Outline
 
@@ -47,3 +48,4 @@ Revision notes, when used, should follow this pattern at the end of modified fil
 
 - `<AEF_ROOT>/shared/citation-rules.md`
 - `<AEF_ROOT>/shared/writing-principles.md`
+- `<AEF_ROOT>/shared/table-conventions.md`
