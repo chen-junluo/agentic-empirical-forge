@@ -2,8 +2,8 @@
 name: AEF02_identify
 description: "基础识别设计工具箱：只做 design，不写代码。依据 references/ 下的方法文献总结（Oster、causal ML、Conley、good / bad controls）设计 credible、causal 的 baseline：estimand、specification、FE、clustering、controls 的 good / bad 判断、identification assumptions 及检验方式、alternative explanations 及排除方法、主要 threats。"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-11-02"
+  version: "1.2.0"
+  last_updated: "2026-11-12"
   stage: "02"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"

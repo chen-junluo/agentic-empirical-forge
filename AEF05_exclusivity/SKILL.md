@@ -2,8 +2,8 @@
 name: AEF05_exclusivity
 description: "期刊定制工具箱：对目标期刊已发表论文做文献综述（用户提供或通过 OpenAlex 检索），提炼该 journal 的 topics、methods、framing、contribution style、section 排布、偏好与排斥项，形成可迭代的 Exclusivity Document；再据此对 manuscript 做结构、framing、语气的定向改写。两个 agent 均可单独调用。"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-11-02"
+  version: "1.2.0"
+  last_updated: "2026-11-12"
   stage: "05"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"

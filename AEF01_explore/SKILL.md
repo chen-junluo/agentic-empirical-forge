@@ -2,8 +2,8 @@
 name: AEF01_explore
 description: "研究选题工具箱：把模糊想法或零散 source 整理成标准化 DATA_DESCRIPTION.md 并理清数据能支持的 identification、生成 3-5 个候选 RQ 并评估可行性、批量验证文献真伪与 claim-abstract 一致性、整理 reference 格式并按需撰写 literature review、基于 idea 与 literature review 起草 research proposal。四个 agent 均可单独调用。"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-11-02"
+  version: "1.2.0"
+  last_updated: "2026-11-12"
   stage: "01"
   pipeline: "empiricalPaperForge"
 ---

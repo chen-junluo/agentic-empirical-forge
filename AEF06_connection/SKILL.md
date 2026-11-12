@@ -2,8 +2,8 @@
 name: AEF06_connection
 description: "投稿策略工具箱：引导用户整理与 senior scholars 的 connection 痕迹形成个人 Connection Document、对某期刊某 topic 的 potential SE/DE、AE、reviewer 的发表记录做文献综述并给出 justification、结合两者撰写 cover letter 与 submission protection strategy。三个 agent 均可单独调用。"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-11-02"
+  version: "1.2.0"
+  last_updated: "2026-11-12"
   stage: "06"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"

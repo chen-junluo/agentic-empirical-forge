@@ -2,8 +2,8 @@
 name: AEF03_extend
 description: "扩展分析设计工具箱：只做 design，不写代码。基于用户确认的 credible baseline，依据 references/ 下的 mechanisms、policy learning、identification checklist 设计 mechanism、heterogeneity 与其他 insightful 的分析；对用户提供的结果按 WORK / NOT WORK / MARGINAL 筛选，把保留结果组织成 storytelling 叙事蓝图。按任务拆为三个条目，均可单独调用。"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-11-02"
+  version: "1.2.0"
+  last_updated: "2026-11-12"
   stage: "03"
   pipeline: "empiricalPaperForge"
   target_journals: "UTD 24 / FT 50"

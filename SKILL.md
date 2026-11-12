@@ -2,8 +2,8 @@
 name: agentic-empirical-forge
 description: "AEF (Agentic Empirical Forge) router：实证论文全流程 skill 的统一入口，负责识别用户意图和项目状态，再加载对应的 sub-skill：AEF01_explore（选题、DATA_DESCRIPTION、文献验证与综述、proposal）、AEF02_identify（baseline 识别设计，只做 design）、AEF03_extend（机制、异质性等扩展分析设计、结果筛选、storytelling，只做 design）、AEF04_writeup（LaTeX 写作与内审）、AEF05_exclusivity（期刊定制）、AEF06_connection（cover letter、reviewer 提名）、AEF07_rebuttal（审稿回复）。用户提到 AEF、AEF-explore、AEF01、AEF-writeup 这类 AEF-<stage> / AEF0X 名称，或 agentic-empirical-forge、empirical paper forge 时触发；用户说开始新论文、帮我选题、设计识别策略、做稳健性、写论文、写 cover letter、写 rebuttal 时也触发。"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-11-02"
+  version: "1.2.0"
+  last_updated: "2026-11-12"
   role: "router"
 ---
 
