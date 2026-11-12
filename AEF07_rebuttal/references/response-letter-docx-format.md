@@ -1,7 +1,7 @@
 # Response Letter Word 格式模板（Response Letter Docx Format）
 
 > 适用于：AEF07_rebuttal 中所有产出或修改 response letter `.docx` 的 agent（`response-letter-writer`、`response-polisher`，以及按用户要求直接改 letter 的任务）。本文件只管 Word 版式与 docx 操作；内容结构见 `templates/response-letter-template.md`，语气见 `references/response-polishing-guide.md`。
-> 基准样本：MSOM round 1 的 `MSOM_ResponseLetter_261102_updated results.docx`（版式基准），以及 `..._261103_updated results_V2.docx` 的修订经验。
+> 基准样本：用户提供的一份已投稿 response letter `.docx`（版式基准），以及其后续修订版本的修订经验；换期刊或换模板时以新的基准样本为准。
 
 - 维护规则
   - 新增要求：在对应类别下加一个 bullet，开头写一个本文件内不重复的英文短标签（如 **Body style**），agent 按标签引用；条目顺序没有意义，不需要编号
@@ -18,17 +18,17 @@
   - 结尾段说明编号规则（`DE-X`、`AE-X`、`R1-X`、`R2-X`），并写明 "All substantive changes in the manuscript are highlighted in blue."
 - **Section order** [样本] 先 `Response to DE Comments`，再 `Response to AE Comments`；之后插分页符，`Response to Reviewer 1 Comments`、`Response to Reviewer 2 Comments` 各自另起一页；section 标题加粗居中
 - **Comment unit** [样本] 每条 comment 按固定顺序排：
-  - Comment ID 行：editor 部分用加粗段落（两端对齐、`outlineLvl=0`），如 `DE-1`、`AE-1 (Customization Level)`；reviewer 部分用 `Heading1`，如 `R1-1 (independent variable measurement)`
+  - Comment ID 行：editor 部分用加粗段落（两端对齐、`outlineLvl=0`），如 `DE-1`、`AE-1 (short title)`；reviewer 部分用 `Heading1`，如 `R1-1 (short title)`
   - Reviewer 原文：斜体、左缩进 2 字符（`w:ind left=480`）、两端对齐、段前段后 6pt；reviewer 的核心诉求用黄色 highlight 标出，方便逐条核对回应
   - `[Response]` 标签：单独一段，加粗 + 斜体 + 下划线
-  - 回复正文：`Paragraph` style；长回复的小节用 `Heading2`（黑色加粗，如 "(a) Our definition and why we adopted it"），不用 `Heading3`（默认是蓝色主题字体）；行内结论用加粗斜体 run-in 标签（如 ***Finding 1: …***）
+  - 回复正文：`Paragraph` style；长回复的小节用 `Heading2`（黑色加粗，如 "(a) [小节标题]"），不用 `Heading3`（默认是蓝色主题字体）；行内结论用加粗斜体 run-in 标签（如 ***Finding 1: …***）
   - 回复内参考文献：单独一段加粗 "References"（只有一条时写 "Reference"），条目用 `Paragraph`，期刊名斜体
   - 分隔线：comment 之间放一个只含 117 个 `-` 的普通段落（段前段后 6pt），不要用表格或段落边框代替
-- **Internal labels** [用户] Comment ID 后括号里的内部备注（如 "(clt-level …)"、"(more answering?)"）只供起草时用，投稿前删掉，或改成 reviewer 能看懂的短标题
+- **Internal labels** [用户] Comment ID 后括号里的内部备注（如只有作者看得懂的缩写、带问号的提醒）只供起草时用，投稿前删掉，或改成 reviewer 能看懂的短标题
 - **Text conventions** [用户]
   - manuscript 位置未定稿时一律写占位符（`Section X`、`Appendix [Y]`、`Table [X]`、`p. X`），即使原文写了具体编号也改回占位符，定稿后统一回填
-  - 变量名在正文和表格里写法一致：斜体，下标用 subscript（如 *gift*<sub>*j*</sub>、*scripted*<sub>*j*</sub>）
-  - 中文例句先给原文，后面括号给英文翻译
+  - 变量名在正文和表格里写法一致：斜体，下标用 subscript（如 *y*<sub>*i*</sub>、*x*<sub>*i*</sub>）
+  - 非英文例句只给英文翻译，不附原文（见 `references/response-polishing-guide.md` **English-only examples**）
   - 同一篇文献在不同 comment 的 References 里，期刊、卷期、页码必须完全一致
 
 ---
@@ -45,16 +45,16 @@
   - 可选的 estimator 行（`OLS` / `2SLS` → `first stage` / `second stage`）
   - `DV:` 行：标签右对齐，DV 名斜体带下标
   - 每个变量占两行：系数行带星号，下面一行是括号里的 SE，变量名单元格纵向合并（`vMerge`）
-  - 然后是 `Controls`、`Physician FE`、`Date FE`（填 Yes），最后是 `Num. obs.`（千分位）
+  - 然后是 `Controls` 与各 FE 行（如 `Unit FE`、`Time FE`，填 Yes），最后是 `Num. obs.`（千分位）
   - 显著性符号：`*** p<0.001`、`** p<0.01`、`* p<0.05`、`† p<0.10`
 - **Cell text** [样本] 回归表 11pt（`sz=22`），数字居中、单元格垂直居中、表内不加粗；文字为主的汇总表用 10pt（`sz=20`），表头居中加粗，正文左对齐，段前段后 2pt（`spacing 40`）
-- **Label match** [用户] 表内的行名、DV 名与正文定义完全一致（如正文是 Directive / Rapport-building，表里就不能写 Action / Relational support）；各表 DV 写法统一（如统一用 *gift*<sub>*j*</sub>，不用 "Patient gifting"）
+- **Label match** [用户] 表内的行名、DV 名与正文定义完全一致（如正文把某类别叫 A，表里就不能换成同义词 A'）；各表 DV 写法统一（如统一用变量名 *y*<sub>*i*</sub>，不混用描述性短语）
 - **Pasted tables** [样本] 从网页或 LLM 输出粘贴来的表格通常是 auto 宽度、`tblCellSpacing 15`、只有表级上下边框，必须按上面的三线表重设
 
 ---
 ## 3. 常见格式偏差与统一做法
 
-- **Normal (Web)** [样本] 从浏览器或 LLM 粘贴的段落会带 `NormalWeb` style 和 `beforeAutospacing` 自动间距（261103 版有 100 多段），统一改成 `Paragraph` + 段前段后 6pt；同一段落如果在基准版本里已有格式，直接沿用基准格式
+- **Normal (Web)** [样本] 从浏览器或 LLM 粘贴的段落会带 `NormalWeb` style 和 `beforeAutospacing` 自动间距（一份修订稿里可能有上百段），统一改成 `Paragraph` + 段前段后 6pt；同一段落如果在基准版本里已有格式，直接沿用基准格式
 - **Heading level** [样本] 回复内小节统一用 `Heading2`，发现 `Heading3` 就改
 - **Numbering** [样本] 同一组小节要么全用自动编号，要么全用手写 "(a)/(b)"，不要混用（如 "(a)" 是自动编号、下一段却写 "Part 2:"）；统一时把前一段的 `numPr` 复制过来
 - **Captions** [样本] 表题常见三种混杂写法（`TableFiguretitle`、`NormalWeb`、普通段落），按 §2 **Caption** 统一
@@ -64,7 +64,7 @@
 ---
 ## 4. 修改既有 letter 的 docx 工作流
 
-- **Versioning** [用户] 不覆盖原文件：复制为 `<原文件名>_V2.docx` 再改；修订作者用用户指定的名字（如 `Junluo CHEN`），并把该作者加进 `word/people.xml`
+- **Versioning** [用户] 不覆盖原文件：复制为 `<原文件名>_V2.docx` 再改；修订作者用用户指定的名字（如 `Author Name`），并把该作者加进 `word/people.xml`
 - **Read first** [样本]
   - 当前文本用 `pandoc --track-changes=accept -t markdown --wrap=none`
   - 合作者 comment 从 `word/comments.xml` + `commentsExtended.xml`（`w15:done`）提取，连同锚定文本一起列出，用来判断哪些还没解决
