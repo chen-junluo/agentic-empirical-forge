@@ -46,7 +46,8 @@
   - `DV:` 行：标签右对齐，DV 名斜体带下标
   - 每个变量占两行：系数行带星号，下面一行是括号里的 SE，变量名单元格纵向合并（`vMerge`）
   - 然后是 `Controls` 与各 FE 行（如 `Unit FE`、`Time FE`，填 Yes），最后是 `Num. obs.`（千分位）
-  - 显著性符号：`*** p<0.001`、`** p<0.01`、`* p<0.05`、`† p<0.10`
+  - 显著性符号：`*** p<0.001`、`** p<0.01`、`* p<0.05`，不用 `† p<0.10`；星号紧贴系数（`0.207***`）
+- **Notes paragraph** [用户] 表下 note 单独成段：10pt（`sz=20`）、无 highlight、只有 `Notes.` 斜体，显著性说明放在最前（见 `shared/table-conventions.md` **Significance note**、**Notes style**）
 - **Cell text** [样本] 回归表 11pt（`sz=22`），数字居中、单元格垂直居中、表内不加粗；文字为主的汇总表用 10pt（`sz=20`），表头居中加粗，正文左对齐，段前段后 2pt（`spacing 40`）
 - **Label match** [用户] 表内的行名、DV 名与正文定义完全一致（如正文把某类别叫 A，表里就不能换成同义词 A'）；各表 DV 写法统一（如统一用变量名 *y*<sub>*i*</sub>，不混用描述性短语）
 - **Pasted tables** [样本] 从网页或 LLM 输出粘贴来的表格通常是 auto 宽度、`tblCellSpacing 15`、只有表级上下边框，必须按上面的三线表重设
