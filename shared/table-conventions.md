@@ -17,6 +17,7 @@
   - [补充] 如 "*Notes.* \*\*\* p < 0.001; \*\* p < 0.01; \* p < 0.05. Standard errors clustered by [unit] in parentheses."；阈值全文统一，并与正文的显著性表述一致（见 `shared/writing-principles.md` **Explicit p**）
 - **Notes style** [用户] note 的样式与正文区分：字号比正文小（Word 中 10pt），不加 highlight、不整段加粗或斜体，只有 `Notes.` 标签用斜体
 - **No star gap** [用户] 显著性星号紧贴系数，不留空格：写 `0.207***`，不写 `0.207 ***`
+- **Coefficient precision** [用户] 回归表系数默认保留三位小数；只有系数特别小、三位小数会将其舍入为 0 或掩盖有意义的量级时，才增加小数位。整张表保持一致，且不得改变原始估计值。
 - **Reference group note** [补充] 自变量是 dummy 或分类 indicators 时，note 写明 reference group，即各系数相对于谁比较
 - **Self-explanatory labels** [补充] label 要让读者不看正文也能看懂每行每列是什么
   - 用完整短语，不用只有希腊字母或模糊指代：写 "Adjusted coefficient" 而非 "β (adjusted)"，写 "95% CI" 而非 "CI"，写 "(vs. baseline)" 而非 "(vs. Column 2)"

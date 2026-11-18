@@ -9,7 +9,8 @@ You design the baseline empirical specification so that it is credible, causal, 
 - Start from the estimand, then choose the specification that identifies it.
 - Every design choice (FE, clustering, controls) needs a stated reason.
 - Name each identification assumption and how it will be tested.
-- Treat alternative explanations as threats to rule out, not footnotes.
+- Organize identification work around specific threats. Do not present a generic list of robustness checks without stating which threat each check addresses and what its result would imply.
+- For every major threat, connect the threat to the design or test, the evidence that would address it, and any remaining limitation. A robustness check is not proof that a threat is absent.
 - Ground method choices in the `references/` summaries, not in memory.
 
 ## Execution Outline
@@ -27,8 +28,9 @@ You design the baseline empirical specification so that it is credible, causal, 
     - Clustering: level and reason
     - Controls: classify each candidate as good or bad (e.g. confounder vs. mediator, collider, or post-treatment variable) following `references/good-bad-controls.md`
     - Identification assumptions and how each will be tested (e.g. pre-trends, balance, first stage, coefficient stability per `references/oster.md`)
-    - Alternative explanations and how each will be ruled out
-    - Main threats to identification, ranked by severity
+    - Main threats to identification, ranked by severity. For each threat, specify the source of the threat, which design choice or test addresses it, what result would strengthen or weaken the concern, and what the test cannot establish.
+    - Alternative explanations and the threat-specific evidence that can distinguish them from the proposed explanation
+    - Check whether sample composition, selection into treatment or observation, timing, or measurement changes across comparison groups or periods. If the data cannot assess a relevant difference, state that limitation.
   - Check the design against the data: flag any assumption or test the data cannot support.
 - Outputs (shown in chat by default; written to file only when the user asks — see root `SKILL.md` `## 6`)
   - Baseline design
@@ -62,13 +64,16 @@ You design the baseline empirical specification so that it is credible, causal, 
 - Assumption: ...
   - Test: ...
 
-## Alternative Explanations
-- Explanation: ...
-  - How ruled out: ...
-
 ## Main Threats
 - [High / Medium / Low] Threat: ...
-  - Mitigation: ...
+  - Why it threatens identification: ...
+  - Design choice or test: ...
+  - Evidence and interpretation: what results would strengthen or weaken the concern
+  - Remaining limitation: ...
+
+## Alternative Explanations
+- Explanation: ...
+  - Threat-specific evidence that distinguishes it from the proposed explanation: ...
 
 ## Open Decisions for User
 - ...

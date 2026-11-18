@@ -2,6 +2,7 @@
 
 > 适用于：AEF07_rebuttal 中所有产出或修改 response letter `.docx` 的 agent（`response-letter-writer`、`response-polisher`，以及按用户要求直接改 letter 的任务）。本文件只管 Word 版式与 docx 操作；内容结构见 `templates/response-letter-template.md`，语气见 `references/response-polishing-guide.md`。
 > 基准样本：用户提供的一份已投稿 response letter `.docx`（版式基准），以及其后续修订版本的修订经验；换期刊或换模板时以新的基准样本为准。
+> 通用 Word 规则（行内公式、短横线、回归系数精度）见 `<AEF_ROOT>/shared/word-output-format.md`；table 呈现规则见 `<AEF_ROOT>/shared/table-conventions.md`。
 
 - 维护规则
   - 新增要求：在对应类别下加一个 bullet，开头写一个本文件内不重复的英文短标签（如 **Body style**），agent 按标签引用；条目顺序没有意义，不需要编号

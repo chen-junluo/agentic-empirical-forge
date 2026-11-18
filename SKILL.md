@@ -50,7 +50,7 @@ metadata:
 ## 4. 加载方式
 
 - 用 Read 读取 `<AEF_ROOT>/<AEFxx_name>/SKILL.md`，按 agent menu 选择 agent，再 Read 该 `agents/<name>.md` 执行；该文件中的相对路径（`agents/`、`references/`、`templates/`）都相对于 `<AEF_ROOT>/<AEFxx_name>/` 解析
-- 全局规范统一从 `<AEF_ROOT>/shared/` 读取，包括 `citation-rules.md`（检查 reference）、`openalex-protocol.md`（稳定访问 OpenAlex）、`writing-principles.md`（所有产出英文文本的 agent 都要遵守）、`table-conventions.md`（所有 table 的呈现）；sub-skill 里写的 `../../shared/` 一律按此处理
+- 全局规范统一从 `<AEF_ROOT>/shared/` 读取，包括 `citation-rules.md`（检查 reference）、`openalex-protocol.md`（稳定访问 OpenAlex）、`writing-principles.md`（所有产出英文文本的 agent 都要遵守）、`table-conventions.md`（所有 table 的呈现）、`word-output-format.md`（所有 `.docx` 输出与修改）；sub-skill 里写的 `../../shared/` 一律按此处理。Stage-specific Word 样式规范仍需一并遵守
 - 开始执行前先用一行告诉用户：`→ 加载 AEFxx_name（原因：显式点名 / 意图匹配 / 状态推断）`
 - 一个 agent 完成并通过 ★ 点后，可按典型顺序提示下一步，不自动执行
 
