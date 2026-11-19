@@ -76,3 +76,7 @@ You run a literature review focused on the people who may handle the manuscript 
 - `<AEF_ROOT>/shared/openalex-protocol.md`
 - `references/nomination-strategy.md`
 - `templates/nomination-report-template.md`
+
+## User-Specific Rules
+
+若同目录存在 `reviewer-profiler.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

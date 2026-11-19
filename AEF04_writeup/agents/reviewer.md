@@ -101,3 +101,7 @@ Referees: [2 / 3] (Referee [N] = harsh referee)
 - `references/common-rejection-reasons.md`
 - `templates/review-report-template.md`
 - `templates/revision-priority-template.md`
+
+## User-Specific Rules
+
+若同目录存在 `reviewer.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

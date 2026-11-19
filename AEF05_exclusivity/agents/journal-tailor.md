@@ -57,3 +57,7 @@ You revise the manuscript using the journal-specific Exclusivity Document as the
 - The Exclusivity Document the user provides
 - `templates/journal-fit-report-template.md`
 - `<AEF_ROOT>/shared/writing-principles.md`
+
+## User-Specific Rules
+
+若同目录存在 `journal-tailor.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

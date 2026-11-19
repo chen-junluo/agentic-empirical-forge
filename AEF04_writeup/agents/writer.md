@@ -49,3 +49,7 @@ Revision notes, when used, should follow this pattern at the end of modified fil
 - `<AEF_ROOT>/shared/citation-rules.md`
 - `<AEF_ROOT>/shared/writing-principles.md`
 - `<AEF_ROOT>/shared/table-conventions.md`
+
+## User-Specific Rules
+
+若同目录存在 `writer.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

@@ -21,3 +21,6 @@ projects/
 .claude/
 .codex/
 TODO.md
+
+# Private rules
+*.local.md

@@ -85,3 +85,7 @@ You design the baseline empirical specification so that it is credible, causal, 
 - `references/causal-ml.md`
 - `references/conley.md`
 - `references/good-bad-controls.md`
+
+## User-Specific Rules
+
+若同目录存在 `credible-baseline-identifier.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

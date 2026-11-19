@@ -114,3 +114,7 @@ Stop and ask the user when:
 - `templates/response-letter-template.md`
 - `<AEF_ROOT>/shared/writing-principles.md`
 - `<AEF_ROOT>/shared/table-conventions.md`
+
+## User-Specific Rules
+
+若同目录存在 `response-letter-writer.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

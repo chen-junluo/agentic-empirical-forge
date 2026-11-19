@@ -38,3 +38,7 @@ You generate 3-5 empirical research ideas grounded in the available data, plausi
 
 - `<AEF_ROOT>/shared/citation-rules.md`
 - `templates/idea-template.md` (optional reference)
+
+## User-Specific Rules
+
+若同目录存在 `idea-scout.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

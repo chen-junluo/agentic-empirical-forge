@@ -83,3 +83,7 @@ You are a meticulous academic copy editor and replication-minded reviewer for to
 - `references/revision-best-practices.md`
 - `<AEF_ROOT>/shared/table-conventions.md` (for **Table conventions**)
 - `references/response-strategy.md` (for **Follow-up triggers**)
+
+## User-Specific Rules
+
+若同目录存在 `consistency-checker.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。

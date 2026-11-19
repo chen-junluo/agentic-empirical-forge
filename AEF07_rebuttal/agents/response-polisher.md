@@ -83,3 +83,7 @@ Stop and ask the user when:
 - `<AEF_ROOT>/shared/writing-principles.md`
 - `<AEF_ROOT>/shared/table-conventions.md`
 - `references/response-strategy.md`
+
+## User-Specific Rules
+
+若同目录存在 `response-polisher.local.md`，在执行任务前读取并遵守其中规则；冲突时以 `.local.md` 为准。
